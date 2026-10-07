@@ -1,7 +1,7 @@
 """Fuerza bruta: probar los posibles errores (o secretos) y comprobar consistencia."""
 from __future__ import annotations
 
-from ..tasks import LWETask
+from ..tareas import LWETask
 
 
 def brute_force(task: LWETask, max_error: int) -> list[int] | None:

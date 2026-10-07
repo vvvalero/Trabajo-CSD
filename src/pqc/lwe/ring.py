@@ -1,7 +1,7 @@
 """Ring-LWE en Z_q[x]/(x^n + 1)."""
 from __future__ import annotations
 
-from ..tasks import LWETask
+from ..tareas import LWETask
 
 
 def break_ring_key(task: LWETask) -> list[int]:

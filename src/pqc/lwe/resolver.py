@@ -1,7 +1,7 @@
 """Rotura de clave LWE: recuperar el vector de secretos s."""
 from __future__ import annotations
 
-from ..tasks import LWETask
+from ..tareas import LWETask
 
 
 def break_key(task: LWETask) -> list[int]:

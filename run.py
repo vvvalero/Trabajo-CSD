@@ -12,7 +12,7 @@ ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from pqc import ggh, lwe  # noqa: E402
-from pqc.tasks import GGHTask, load_all  # noqa: E402
+from pqc.tareas import GGHTask, load_all  # noqa: E402
 
 
 def solve_task(t):

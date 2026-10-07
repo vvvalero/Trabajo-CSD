@@ -1,7 +1,7 @@
 """Punto de entrada GGH: resolver una tarea SVP / CVP."""
 from __future__ import annotations
 
-from ..tasks import GGHTask
+from ..tareas import GGHTask
 
 
 def solve(task: GGHTask) -> list[int]:

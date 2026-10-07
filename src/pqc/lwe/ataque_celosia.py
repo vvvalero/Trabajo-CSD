@@ -4,7 +4,7 @@ Usa los algoritmos genericos de pqc.celosias (LLL, Babai, enumeracion).
 """
 from __future__ import annotations
 
-from ..tasks import LWETask
+from ..tareas import LWETask
 
 
 def sistema_a_celosia(task: LWETask):

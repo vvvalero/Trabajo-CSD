@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pqc.tasks import load_all
+from pqc.tareas import load_all
 
 DATA = Path(__file__).parent.parent / "data"
 

@@ -19,7 +19,7 @@ pytest
 ## Estructura
 ```
 data/ggh, data/lwe   ficheros de tareas
-src/pqc/tasks.py     parser (HECHO, tolerante a erratas)
+src/pqc/tareas.py     parser (HECHO, tolerante a erratas)
 src/pqc/celosias/    un fichero por algoritmo, compartido por GGH y LWE <- TODO
                      gso.py  lll.py  babai.py  enumeracion.py  bkz.py
 src/pqc/ggh/         GGH, un fichero por metodo            <- TODO

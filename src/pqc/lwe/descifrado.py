@@ -1,7 +1,7 @@
 """Descifrado de un bit con LWE (Ejemplo 6 del PDF)."""
 from __future__ import annotations
 
-from ..tasks import LWETask
+from ..tareas import LWETask
 
 
 def decrypt_bit(task: LWETask, s: list[int]) -> int:
