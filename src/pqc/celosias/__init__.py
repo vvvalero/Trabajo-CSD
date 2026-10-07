@@ -1,6 +1,6 @@
 from .babai import babai_nearest_plane, babai_round
 from .bkz import bkz
-from .enumeration import enumerate_short
+from .enumeracion import enumerate_short
 from .gso import gso
 from .lll import lll
 

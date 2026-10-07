@@ -1,4 +1,4 @@
-"""Reduccion LLL. Util para: base publica GGH -> base 'buena', q-ary lattices de LWE."""
+"""Reduccion LLL. Util para: base publica GGH -> base 'buena', celosias q-arias de LWE."""
 from __future__ import annotations
 
 import numpy as np
