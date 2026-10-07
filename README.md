@@ -7,13 +7,20 @@ GGH (SVP/CVP en celosias) y LWE / Ring-LWE. Enunciado: `docs/enunciado.pdf`.
 - Implementar LLL, enumeracion y Babai uno mismo encaja con lo que se evalua (justificar el algoritmo, traza, soluciones propias).
 - Plan B si algun tier grande es lento en Python: pasar el bucle caliente a C (hay `gcc`) o usar fpylll desde WSL (hay Ubuntu).
 
-## Uso
+## Uso (Windows y macOS)
+Requisitos: Python 3.9 o superior (desarrollado con 3.13) y, para la memoria, LaTeX con `latexmk`
+(MiKTeX en Windows; MacTeX o BasicTeX en macOS).
+
+En macOS usar `python3` / `pip3` donde abajo pone `python` / `pip`.
 ```
+python -m venv .venv                     # opcional
+.venv\Scripts\activate                   # Windows   (macOS: source .venv/bin/activate)
 pip install -r requirements.txt
-python run.py list          # tareas y parametros
+python run.py list                       # tareas y parametros
 python run.py solve Tier0T01_Latt
-python run.py all           # -> results/results.md
-pytest
+python run.py all                        # -> results/results.md
+python -m pytest
+python report/build.py                   # memoria -> report/memoria.pdf
 ```
 
 ## Estructura
@@ -28,7 +35,7 @@ src/pqc/lwe/         LWE / Ring-LWE, un fichero por metodo <- TODO
                      resolver.py  gauss.py  fuerza_bruta.py  ataque_celosia.py  descifrado.py  ring.py
 scripts/bench.py     tiempo vs talla                   <- TODO
 tests/               parser OK; tests de algoritmos    <- TODO
-report/memoria.tex    memoria en LaTeX (5 pag., pesos 15/30/40/15); compilar: report/build.ps1 -> report/memoria.pdf
+report/memoria.tex    memoria en LaTeX (5 pag., pesos 15/30/40/15); compilar: python report/build.py -> report/memoria.pdf
 ```
 
 ## Las tareas (45 ficheros: 22 GGH + 23 LWE; ver `run.py list`)
