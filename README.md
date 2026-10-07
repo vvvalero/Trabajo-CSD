@@ -4,8 +4,7 @@ GGH (SVP/CVP en celosias) y LWE / Ring-LWE. Enunciado: `enunciado.pdf`.
 
 ## Lenguaje: Python 3.13 + numpy
 - Aritmetica entera de precision arbitraria (modulos, determinantes, HNF) y numpy para el GSO.
-- Sin dependencias dificiles: `fpylll` / Sage **no** se instalan en Windows (comprobado: no hay wheel). Implementar
-  LLL, enumeracion y Babai uno mismo encaja con lo que se evalua (justificar el algoritmo, traza, soluciones propias).
+- Implementar LLL, enumeracion y Babai uno mismo encaja con lo que se evalua (justificar el algoritmo, traza, soluciones propias).
 - Plan B si algun tier grande es lento en Python: pasar el bucle caliente a C (hay `gcc`) o usar fpylll desde WSL (hay Ubuntu).
 
 ## Uso
