@@ -1,0 +1,28 @@
+#  ###############  ###############  ###############  ###############   
+#  ###############  ###############  ###############  ###############    
+#  Problema a resolver (rotura / criptoanálisis / criptoanalisis Ring-LWE)
+criptoanalisis Ring-LWE
+#  Criptograma
+#       N/A en caso de rotura
+#       dos lineas (coeficientes de c1 y c2) en caso de Ring-LWE
+#       primer coeficiente corresponde a x^0
+62, 4, 35, 3117, 3118, 3112, 31, 3076, 4, 3078, 3093, 2, 3108, 3116, 3105, 3101, 3103, 3104, 3108, 3091, 3075, 3051, 3088, 3113, 3077, 3097, 3100, 3106, 3098, 11, 3116, 24
+2082, 554, 2133, 515, 433, 482, 2294, 2166, 2208, 1988, 424, 616, 550, 357, 480, 1850, 252, 203, 1806, 361, 173, 2917, 3006, 83, 2939, 2882, 1214, 2734, 1236, 1072, 2729, 2855
+#  ###############  ###############  ###############  ###############   
+#  Dimensión del sistema de ecuaciones / grado del polinomio
+32
+# reducción módulo
+3119
+# coeficientes de polinomio a
+4, 3, 6, 2, 11, 15, 13, 6, 0, 10, 10, 4, 8, 15, 10, 8, 11, 13, 9, 2, 5, 14, 1, 13, 5, 4, 3, 10, 3, 10, 7, 8
+# coeficientes de polinomio b
+2825, 2890, 2918, 2831, 2854, 2940, 2980, 2946, 2906, 2975, 3059, 3020, 3031, 3073, 3092, 3087, 3080, 17, 60, 56, 53, 100, 116, 171, 185, 137, 171, 217, 226, 240, 224, 291
+#  ###############  ###############  ###############  ###############   
+#  Solución al problema:
+#       vector de secretos en caso de rotura
+#       bit cifrado en caso de criptoanálisis LWE
+#       palabra de bits en caso de criptoanálisis Ring-LWE 
+#  (los errores considerados pueden derivarse de esta información)
+N/D
+#  ###############  ###############  ###############  ###############    
+#  ###############  ###############  ###############  ###############   

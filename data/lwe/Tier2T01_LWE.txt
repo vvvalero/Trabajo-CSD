@@ -1,0 +1,34 @@
+#  ###############  ###############  ###############  ###############   
+#  ###############  ###############  ###############  ###############    
+#  Problema a resolver (rotura / criptoanálisis)
+rotura
+#  Criptograma (N/A en caso de rotura)
+N/A
+#  ###############  ###############  ###############  ###############   
+#  Dimensión del sistema de ecuaciones
+4
+# reducción módulo
+463
+# coeficientes de las ecuaciones
+{90, 203, 399, 244},
+{299, 147, 127, 33},
+{67, 246, 68, 390},
+{402, 94, 422, 29},
+{236, 81, 191, 154},
+{340, 223, 426, 5},
+{452, 211, 73, 94},
+{341, 140, 70, 233},
+{355, 99, 41, 452},
+{46, 120, 72, 165},
+{252, 243, 308, 7},
+{325, 5, 245, 401}
+# términos independientes
+{104, 117, 89, 30, 396, 185, 71, 77, 122, 86, 187, 360}
+#  ###############  ###############  ###############  ###############   
+#  Solución al problema:
+#       vector de secretos en caso de rotura
+#       bit cifrado en caso de criptoanálisis
+#  (los errores considerados pueden derivarse de esta información)
+N/D
+#  ###############  ###############  ###############  ###############    
+#  ###############  ###############  ###############  ###############   

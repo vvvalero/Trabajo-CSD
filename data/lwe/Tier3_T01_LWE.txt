@@ -1,0 +1,28 @@
+#  ###############  ###############  ###############  ###############   
+#  ###############  ###############  ###############  ###############    
+#  Problema a resolver (rotura / criptoanálisis / criptoanalisis Ring-LWE)
+criptoanalisis Ring-LWE
+#  Criptograma
+#       N/A en caso de rotura
+#       dos lineas (coeficientes de c1 y c2) en caso de Ring-LWE
+#       primer coeficiente corresponde a x^0
+10, 20, 29, 3, 19, 1381, 1392, 1394, 45, 14, 1, 1382, 13, 1380, 1365, 1397
+89, 768, 85, 189, 784, 728, 698, 122, 38, 807, 123, 863, 24, 134, 106, 2
+#  ###############  ###############  ###############  ###############   
+#  Dimensión del sistema de ecuaciones / grado del polinomio
+16
+# reducción módulo
+1399
+# coeficientes de polinomio a
+3, 14, 13, 1, 8, 1, 7, 12, 8, 4, 3, 5, 10, 6, 2, 13
+# coeficientes de polinomio b
+1330, 1335, 1366, 5, 1380, 11, 23, 55, 27, 20, 38, 38, 41, 80, 98, 69
+#  ###############  ###############  ###############  ###############   
+#  Solución al problema:
+#       vector de secretos en caso de rotura
+#       bit cifrado en caso de criptoanálisis LWE
+#       palabra de bits en caso de criptoanálisis Ring-LWE 
+#  (los errores considerados pueden derivarse de esta información)
+N/D
+#  ###############  ###############  ###############  ###############    
+#  ###############  ###############  ###############  ###############   

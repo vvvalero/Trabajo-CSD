@@ -1,0 +1,96 @@
+% Memoria del trabajo de criptografía post-cuántica (CSD, MUCC - UPV)
+% Requisitos del enunciado: máx. 5 páginas, fuente 12 pt, márgenes <= 2,54 cm, interlineado simple.
+% Secciones obligatorias y peso: presentación 15 %, algoritmos 30 %, tareas 40 %, conclusiones 15 %.
+% Compilar:  latexmk -pdf memoria.tex      (o:  .\build.ps1)
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=2.54cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+% Marcador de pendientes (en rojo). Buscar "TODO" antes de entregar.
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\title{\textbf{Criptoanálisis de criptografía post-cuántica:\\ GGH y LWE}}
+\author{\todo{Nombre 1, Nombre 2, Nombre 3, Nombre 4} \\[2pt]
+        Criptología y Seguridad de los Datos \\
+        Máster en Ciberseguridad y Ciberinteligencia, ETSInf-UPV}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+%% ---------------------------------------------------------------------------
+\section{Introducción}
+% Peso 15 % junto con la presentación general.
+Objetivo del trabajo y problemas abordados: \emph{Shortest Vector Problem} (SVP),
+\emph{Closest Vector Problem} (CVP), cifrado GGH, \emph{Learning With Errors} (LWE) y Ring-LWE.
+\todo{Tareas elegidas (tier y número) y criterio de elección. Lenguaje y entorno: Python 3 + numpy.}
+
+%% ---------------------------------------------------------------------------
+\section{Algoritmos}
+% Peso 30 %. Por cada algoritmo: qué hace, POR QUÉ resuelve el problema, coste, hipótesis.
+\subsection{Reducción de bases y aproximaciones de Babai}
+\todo{LLL: idea, condiciones de reducción, por qué sirve contra GGH. Redondeo de Babai y plano más cercano.}
+
+\subsection{SVP y CVP exactos}
+\todo{Fuerza bruta (justificar cuándo es viable) y enumeración. Justificación de la cota de búsqueda.}
+
+\subsection{LWE y Ring-LWE}
+\todo{Estrategia para recuperar el secreto, descifrado de un bit (umbral), caso Ring-LWE en $\mathbb{Z}_q[x]/(x^n+1)$.}
+
+\subsection{Aportaciones propias}
+\todo{Si las hay: hipótesis en la que se basan y por qué se espera que funcionen.}
+
+%% ---------------------------------------------------------------------------
+\section{Resolución de tareas}
+% Peso 40 %. Traza breve con resultados intermedios + evolución del tiempo con la talla.
+\begin{table}[ht]
+\centering
+\begin{tabular}{llllr}
+\toprule
+Tarea & Tier & Método & Resultado & Tiempo (s) \\
+\midrule
+\todo{Tier0T01\_Latt} & 0 & \todo{} & \todo{} & \todo{} \\
+\bottomrule
+\end{tabular}
+\caption{Resumen de tareas resueltas.}
+\label{tab:tareas}
+\end{table}
+
+\todo{Traza de ejecución de al menos una tarea por algoritmo (resultados intermedios).}
+
+% Gráfica de tiempo frente a talla: se incluye si existe results/bench.pdf
+\IfFileExists{../results/bench.pdf}{%
+  \begin{figure}[h]\centering
+  \includegraphics[width=0.7\linewidth]{../results/bench.pdf}
+  \caption{Tiempo de resolución en función de la talla del problema.}
+  \end{figure}}{\todo{Gráfica tiempo vs.\ talla (scripts/bench.py $\to$ results/bench.pdf).}}
+
+%% ---------------------------------------------------------------------------
+\section{Conclusiones}
+% Peso 15 %.
+\todo{Qué se ha aprendido sobre la dificultad de los problemas, cómo escala el coste, limitaciones.}
+
+%% ---------------------------------------------------------------------------
+\begin{thebibliography}{9}
+\bibitem{ggh} O.~Goldreich, S.~Goldwasser, S.~Halevi.
+  \emph{Public-key cryptosystems from lattice reduction problems}. CRYPTO '97, pp.\ 112--131, 1997.
+\bibitem{regev} O.~Regev.
+  \emph{On lattices, learning with errors, random linear codes, and cryptography}.
+  Journal of the ACM 56(6):34, 2009.
+\bibitem{lll} A.~K.~Lenstra, H.~W.~Lenstra, L.~Lovász.
+  \emph{Factoring polynomials with rational coefficients}. Math.\ Annalen 261, 1982.
+\todo{Resto de recursos bibliográficos y tecnológicos utilizados.}
+\end{thebibliography}
+
+\end{document}
