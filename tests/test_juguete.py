@@ -3,7 +3,10 @@ from fractions import Fraction
 
 import pytest
 
-from pqc.ggh.juguete import _inverse, _matmul, decrypt, encrypt, keygen
+from pqc.ggh.juguete import decrypt, encrypt, keygen
+from pqc.matrices import det as _det
+from pqc.matrices import inverse as _inverse
+from pqc.matrices import producto_matrices as _producto_matrices
 
 # Ejemplos 1-3 del PDF
 B = [[3, 1], [-1, 4]]
@@ -11,26 +14,8 @@ U = [[3, 4], [2, 3]]
 B_PUB = [[5, 19], [3, 14]]
 
 
-def _det(M):
-    """Determinante exacto por eliminacion con Fraction (independiente de _inverse)."""
-    M = [[Fraction(a) for a in fila] for fila in M]
-    n, det = len(M), Fraction(1)
-    for i in range(n):
-        p = next((j for j in range(i, n) if M[j][i] != 0), None)
-        if p is None:
-            return Fraction(0)
-        if p != i:
-            M[i], M[p] = M[p], M[i]
-            det = -det
-        det *= M[i][i]
-        for j in range(i + 1, n):
-            f = M[j][i] / M[i][i]
-            M[j] = [a - f * b for a, b in zip(M[j], M[i])]
-    return det
-
-
 def test_ejemplo1_clave_publica():
-    assert _matmul(U, B) == B_PUB
+    assert _producto_matrices(U, B) == B_PUB
 
 
 def test_ejemplo2_cifrado():
@@ -63,7 +48,7 @@ def test_keygen_unimodular_y_publica(n):
     B_, U_, P = keygen(n, seed=n)
     assert abs(_det(U_)) == 1
     assert _det(B_) != 0
-    assert P == _matmul(U_, B_)
+    assert P == _producto_matrices(U_, B_)
     assert _det(P) == _det(U_) * _det(B_)
 
 
