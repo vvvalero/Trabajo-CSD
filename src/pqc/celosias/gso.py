@@ -1,4 +1,4 @@
-"""Gram-Schmidt de una base. Base comun de LLL, Babai, enumeracion y BKZ.
+"""Gram-Schmidt de una base. Base comun de LLL, Babai y enumeracion.
 
 Convenio: base = lista de filas (int o Fraction), un vector por FILA. Aritmetica exacta con Fraction.
 """

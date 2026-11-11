@@ -1,5 +1,5 @@
-from .descifrado import decrypt_bit
-from .ring import break_ring_key, decrypt_ring
-from .resolver import break_key
+from .descifrado import descifrar_bit
+from .resolver import romper_clave
+from .ring import descifrar_ring, romper_clave_ring
 
-__all__ = ["break_key", "decrypt_bit", "break_ring_key", "decrypt_ring"]
+__all__ = ["romper_clave", "descifrar_bit", "romper_clave_ring", "descifrar_ring"]

@@ -126,7 +126,7 @@ def es_entera(A: Union[Matriz, Vector]) -> bool:
 
 # ============================================================================ INVERSA Y DETERMINANTE
 
-def inverse(A: Matriz) -> Matriz:
+def inversa(A: Matriz) -> Matriz:
     """Matriz inversa exacta (con fracciones), por el metodo de Gauss-Jordan.
 
     Idea: escribimos A y la identidad I una al lado de la otra. Hacemos operaciones de filas
@@ -235,7 +235,7 @@ def centrado_vector(v: Vector, q: int) -> List[int]:
 def inversa_mod(A: Matriz, q: int) -> Matriz:
     """Matriz inversa trabajando modulo q (resultado con numeros entre 0 y q-1).
 
-    Es el mismo Gauss-Jordan que inverse(), pero en vez de dividir multiplicamos por el
+    Es el mismo Gauss-Jordan que inversa(), pero en vez de dividir multiplicamos por el
     inverso modular. Por ejemplo, modulo 7 el inverso de 3 es 5, porque 3 * 5 = 15 = 1 (mod 7).
     Funciona cuando q es primo (todos los modulos de las tareas lo son).
     """

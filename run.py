@@ -1,62 +1,83 @@
-"""CLI del proyecto.
+"""Resolver las tareas desde la terminal.
 
   python run.py list              lista las tareas y sus parametros
-  python run.py solve <nombre>    ejecuta el solver de una tarea (p.ej. Tier0T01_Latt)
-  python run.py all               ejecuta todas y escribe results/results.md
+  python run.py solve <nombre>    resuelve una tarea (p. ej. python run.py solve Tier0T01_Latt)
+  python run.py all               resuelve todas y guarda la tabla en results/results.md
 """
 import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).parent
-sys.path.insert(0, str(ROOT / "src"))
+RAIZ = Path(__file__).parent
+sys.path.insert(0, str(RAIZ / "src"))   # para poder importar el paquete pqc
 
 from pqc import ggh, lwe  # noqa: E402
 from pqc.lector_tareas import TareaGGH, TareaRingLWE, leer_todas  # noqa: E402
 
 
-def solve_task(t):
-    if isinstance(t, TareaGGH):
-        return ggh.solve(t)
-    if isinstance(t, TareaRingLWE):
-        s = lwe.break_ring_key(t)
-        return lwe.decrypt_ring(t, s)
-    s = lwe.break_key(t)
-    return s if t.problema == "rotura" else lwe.decrypt_bit(t, s)
+def describir(tarea) -> str:
+    """Una linea con los datos principales de la tarea (para 'list')."""
+    if isinstance(tarea, TareaGGH):
+        modulo = f" mod={tarea.modulo}" if tarea.modulo else ""
+        return f"GGH {tarea.problema} dim={tarea.dim}{modulo}"
+    if isinstance(tarea, TareaRingLWE):
+        return f"Ring-LWE n={tarea.n} q={tarea.q}"
+    return f"LWE {tarea.problema} n={tarea.n} q={tarea.q} ecuaciones={len(tarea.A)}"
 
 
-def describir(t):
-    """Una linea con los parametros de la tarea (para 'list')."""
-    if isinstance(t, TareaGGH):
-        return f"GGH {t.problema} dim={t.dim}" + (f" mod={t.modulo}" if t.modulo else "")
-    if isinstance(t, TareaRingLWE):
-        return f"Ring-LWE n={t.n} q={t.q}"
-    return f"LWE {t.problema} n={t.n} q={t.q} m={len(t.A)}"
+def resolver(tarea):
+    """Llama al metodo que corresponde segun el tipo de tarea."""
+    if isinstance(tarea, TareaGGH):
+        return ggh.solve(tarea)
+    if isinstance(tarea, TareaRingLWE):
+        s = lwe.romper_clave_ring(tarea)
+        return lwe.descifrar_ring(tarea, s)
+    s = lwe.romper_clave(tarea)
+    if tarea.problema == "rotura":
+        return s
+    return lwe.descifrar_bit(tarea, s)
 
 
-def main(argv):
-    tareas = leer_todas(ROOT / "data")
-    allt = {t.nombre: t for lista in tareas.values() for t in lista}
-    cmd = argv[1] if len(argv) > 1 else "list"
-    if cmd == "list":
-        for t in allt.values():
-            print(f"{t.nombre:20s} {describir(t)}")
-    elif cmd in ("solve", "all"):
-        names = [argv[2]] if cmd == "solve" else list(allt)
-        rows = []
-        for n in names:
-            t0 = time.perf_counter()
-            try:
-                res = solve_task(allt[n])
-            except NotImplementedError:
-                res = "TODO"
-            rows.append((n, res, allt[n].solucion, time.perf_counter() - t0))
-            print(f"{n:20s} {res} (esperado: {allt[n].solucion}) {rows[-1][3]:.3f}s")
-        if cmd == "all":
-            out = ["| tarea | resultado | esperado | s |", "|---|---|---|---|"]
-            out += [f"| {n} | {r} | {e} | {s:.3f} |" for n, r, e, s in rows]
-            (ROOT / "results").mkdir(exist_ok=True)
-            (ROOT / "results" / "results.md").write_text("\n".join(out), encoding="utf-8")
+def resolver_y_medir(tarea):
+    """Resuelve la tarea, la imprime y devuelve (nombre, resultado, esperado, segundos)."""
+    inicio = time.perf_counter()
+    try:
+        resultado = resolver(tarea)
+    except NotImplementedError:
+        resultado = "sin implementar"
+    segundos = time.perf_counter() - inicio
+    print(f"{tarea.nombre:20s} {resultado}  (esperado: {tarea.solucion})  {segundos:.3f} s")
+    return tarea.nombre, resultado, tarea.solucion, segundos
+
+
+def guardar_tabla(filas) -> None:
+    """Guarda los resultados como tabla Markdown en results/results.md."""
+    lineas = ["| tarea | resultado | esperado | segundos |", "|---|---|---|---|"]
+    lineas += [f"| {nombre} | {res} | {esp} | {seg:.3f} |" for nombre, res, esp, seg in filas]
+    carpeta = RAIZ / "results"
+    carpeta.mkdir(exist_ok=True)
+    (carpeta / "results.md").write_text("\n".join(lineas), encoding="utf-8")
+    print(f"Tabla guardada en {carpeta / 'results.md'}")
+
+
+def main(argumentos) -> None:
+    tareas = {t.nombre: t for lista in leer_todas(RAIZ / "data").values() for t in lista}
+    orden = argumentos[1] if len(argumentos) > 1 else "list"
+
+    if orden == "list":
+        for tarea in tareas.values():
+            print(f"{tarea.nombre:20s} {describir(tarea)}")
+
+    elif orden == "solve" and len(argumentos) == 3:
+        nombre = argumentos[2]
+        if nombre not in tareas:
+            print(f"No existe la tarea '{nombre}'. Usa 'python run.py list' para ver los nombres.")
+            return
+        resolver_y_medir(tareas[nombre])
+
+    elif orden == "all":
+        guardar_tabla([resolver_y_medir(tarea) for tarea in tareas.values()])
+
     else:
         print(__doc__)
 

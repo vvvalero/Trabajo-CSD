@@ -1,17 +1,30 @@
-"""GGH de juguete (seccion 2.1 del PDF) para probar los ataques con ejemplos propios."""
+"""GGH de juguete (seccion 2.1 del enunciado): generar claves, cifrar y descifrar.
+
+Sirve para crear ejemplos propios con los que probar los ataques y medir tiempos.
+"""
 from __future__ import annotations
 
 import random
 
-from ..matrices import inverse, producto_matrices
+from ..matrices import (
+    es_entera,
+    identidad,
+    inversa,
+    producto_matrices,
+    redondeo_vector,
+    suma_vectores,
+    vector_por_matriz,
+)
 
 
-def _random_unimodular(n: int, rng: random.Random, pasos: int, k_max: int):
-    """Matriz unimodular: identidad + operaciones elementales (sumar k*fila_j a fila_i, o permutar).
+def _unimodular_aleatoria(n: int, rng: random.Random, pasos: int, k_max: int):
+    """Matriz con determinante +-1, hecha a partir de la identidad con operaciones de filas.
 
-    Cada operacion conserva det = +-1, asi que el resultado es unimodular por construccion.
+    En cada paso: o se intercambian dos filas, o a una fila se le suma k veces otra.
+    Ninguna de las dos operaciones cambia el valor absoluto del determinante, asi que
+    el resultado sigue teniendo determinante +-1 (es unimodular).
     """
-    U = [[int(i == j) for j in range(n)] for i in range(n)]
+    U = identidad(n)
     for _ in range(pasos):
         i, j = rng.sample(range(n), 2)
         if rng.random() < 0.1:
@@ -22,30 +35,38 @@ def _random_unimodular(n: int, rng: random.Random, pasos: int, k_max: int):
     return U
 
 
-def keygen(n: int, seed: int | None = None, diag: int = 50, off: int = 3, pasos: int | None = None):
-    """B, U unimodular, B' = U B. Clave privada <B, U>, publica <B'>.
+def generar_claves(n: int, semilla: int | None = None, diag: int = 50, fuera: int = 3,
+                   pasos: int | None = None):
+    """Devuelve (B, U, B_pub): clave privada (B, U) y clave publica B_pub = U B.
 
-    B: base buena, casi ortogonal (diagonal grande en [diag, 2*diag], resto en [-off, off]).
-       Con diag > n*off es diagonalmente dominante, luego det(B) != 0.
-    U: unimodular con entradas grandes, para que B' = U B sea una base mala.
-    Devuelve (B, U, B_pub).
+    B: base "buena", casi ortogonal: diagonal grande (entre diag y 2*diag) y el resto pequeno
+       (entre -fuera y fuera). Si diag > n*fuera, la diagonal domina y det(B) != 0.
+    U: matriz unimodular con numeros grandes, para que B_pub sea una base "mala" de la misma celosia.
+    La misma semilla da siempre las mismas claves.
     """
-    assert n >= 2 and diag > n * off, "diag debe ser > n*off para garantizar det(B) != 0"
-    rng = random.Random(seed)
-    B = [[rng.randint(diag, 2 * diag) if i == j else rng.randint(-off, off) for j in range(n)] for i in range(n)]
-    U = _random_unimodular(n, rng, pasos if pasos is not None else 4 * n * n, k_max=2)
+    if n < 2 or diag <= n * fuera:
+        raise ValueError("Hace falta n >= 2 y diag > n*fuera (para que det(B) != 0)")
+    rng = random.Random(semilla)
+    B = [[rng.randint(diag, 2 * diag) if i == j else rng.randint(-fuera, fuera) for j in range(n)]
+         for i in range(n)]
+    U = _unimodular_aleatoria(n, rng, pasos if pasos is not None else 4 * n * n, k_max=2)
     return B, U, producto_matrices(U, B)
 
 
-def encrypt(x, B_pub, e):
-    """c = x B' + e"""
-    assert len(x) == len(e) == len(B_pub)
-    c = producto_matrices([x], B_pub)[0]
-    return [ci + ei for ci, ei in zip(c, e)]
+def cifrar(x, B_pub, e):
+    """c = x B_pub + e  (mensaje x, error pequeno e)."""
+    if not len(x) == len(e) == len(B_pub):
+        raise ValueError("x, e y la base deben tener la misma dimension")
+    return suma_vectores(vector_por_matriz(x, B_pub), e)
 
-def decrypt(c, B_priv, U):
-    """y = round(c B^-1);  x = y U^-1"""
-    y = [round(v) for v in producto_matrices([c], inverse(B_priv))[0]]
-    x = producto_matrices([y], inverse(U))[0]
-    assert all(v.denominator == 1 for v in x), "x no entero: ruido excesivo o claves incoherentes"
+
+def descifrar(c, B, U):
+    """Descifrado legitimo: y = redondeo(c B^-1) y despues x = y U^-1.
+
+    Funciona si el error es pequeno: c B^-1 = x U + e B^-1, y el redondeo elimina e B^-1.
+    """
+    y = redondeo_vector(vector_por_matriz(c, inversa(B)))
+    x = vector_por_matriz(y, inversa(U))
+    if not es_entera(x):
+        raise ValueError("x no es entero: error demasiado grande o claves incoherentes")
     return [int(v) for v in x]

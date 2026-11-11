@@ -6,6 +6,9 @@ __pycache__/
 venv/
 *.egg-info/
 
+# Resultados generados (python run.py all, scripts/bench.py): se regeneran ejecutando el codigo
+results/
+
 # LaTeX (se ignora lo generado al compilar; memoria.pdf se mantiene)
 report/build/
 *.aux

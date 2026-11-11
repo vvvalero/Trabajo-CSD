@@ -172,7 +172,8 @@ def leer_lwe(ruta: str | Path) -> TareaLWE | TareaRingLWE:
     )
 
     _comprobar(all(len(fila) == n for fila in tarea.A), ruta, "alguna ecuacion no tiene n coeficientes")
-    _comprobar(len(tarea.b) == len(tarea.A), ruta, "distinto numero de ecuaciones y de terminos independientes")
+    _comprobar(len(tarea.b) == len(tarea.A), ruta,
+               "distinto numero de ecuaciones y de terminos independientes")
     _comprobar(cripto is None or len(cripto[0]) == n, ruta, "criptograma de tamano incorrecto")
     # La rotura no trae criptograma y el criptoanalisis si: asi detectamos un tipo mal escrito.
     _comprobar((problema == "rotura") == (cripto is None), ruta,
@@ -200,7 +201,8 @@ def _leer_ring_lwe(ruta: Path, bloques: list[list[str]]) -> TareaRingLWE:
         solucion=None if _sin_valor(solucion[0]) else [int(c) for c in solucion[0] if c in "01"],
     )
     for nombre_pol in ("a", "b", "c1", "c2"):
-        _comprobar(len(getattr(tarea, nombre_pol)) == n, ruta, f"el polinomio {nombre_pol} no tiene n coeficientes")
+        _comprobar(len(getattr(tarea, nombre_pol)) == n, ruta,
+                   f"el polinomio {nombre_pol} no tiene n coeficientes")
     _comprobar(tarea.solucion is None or len(tarea.solucion) == n, ruta, "la palabra de bits no tiene n bits")
     return tarea
 

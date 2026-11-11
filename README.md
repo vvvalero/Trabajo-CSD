@@ -1,63 +1,83 @@
-# Trabajo de criptografia post-cuantica
+# Trabajo de criptografía post-cuántica
 
-GGH (SVP/CVP en celosias) y LWE / Ring-LWE. Enunciado: `docs/enunciado.pdf`.
+Criptoanálisis de GGH (SVP/CVP en celosías), LWE y Ring-LWE.
+Asignatura: Criptología y Seguridad de los Datos (MUCC, ETSInf-UPV).
+Grupo: Óscar García García y Valentín Valero Jiménez. Entrega: 16/11/2026.
 
-## Lenguaje: Python 3.13
-- Convenio: matrices como **listas de filas de `int` / `Fraction`** (aritmetica exacta, ver `src/pqc/matrices.py`);
-  una base de celosia tiene un vector por fila. GSO y LLL exactos, sin errores de redondeo en la condicion de Lovasz.
-- numpy solo donde no hace falta exactitud (vectorizar la fuerza bruta, bench) y matplotlib para las graficas.
-- Convenio LWE: b = A s + e (mod q), luego el error es e = b - A s; Ring-LWE: b = a s + e (mod q, x^n + 1).
-  Fuente: Tema 11 y Ejemplo 4 del enunciado (verificado en `tests/test_convenios.py`). La ec. (1) del
-  enunciado escribe "A x = b + e", pero su propio Ejemplo 4 sigue b = A s + e (ver `docs/algoritmos.md`, 3.3).
-- Implementar LLL, enumeracion y Babai uno mismo encaja con lo que se evalua (justificar el algoritmo, traza, soluciones propias).
-- Plan B si algun tier grande es lento en Python: pasar el bucle caliente a C (hay `gcc`) o usar fpylll desde WSL (hay Ubuntu).
+## Documentación
+
+| Fichero | Contenido |
+|---|---|
+| `docs/enunciado.pdf` | Enunciado del trabajo y criterios de evaluación |
+| `docs/MUCC - Criptologia MUCC Tema-11-1.pdf` | Temario (Tema 11): GGH, LWE y Ring-LWE con ejemplos |
+| `docs/algoritmos.md` | Qué hace cada algoritmo, por qué funciona y por qué lo usamos (para la memoria y la defensa) |
 
 ## Uso (Windows y macOS)
-Requisitos: Python 3.9 o superior (desarrollado con 3.13) y, para la memoria, LaTeX con `latexmk`
-(MiKTeX en Windows; MacTeX o BasicTeX en macOS).
 
-En macOS usar `python3` / `pip3` donde abajo pone `python` / `pip`.
+Requisitos: Python 3.9 o superior (desarrollado con 3.13) y, para la memoria, LaTeX con `latexmk`
+(MiKTeX en Windows; MacTeX o BasicTeX en macOS). En macOS usar `python3` / `pip3`.
+
 ```
-python -m venv .venv                     # opcional
-.venv\Scripts\activate                   # Windows   (macOS: source .venv/bin/activate)
 pip install -r requirements.txt
-python run.py list                       # tareas y parametros
-python run.py solve Tier0T01_Latt
-python run.py all                        # -> results/results.md
-python -m pytest
-python report/build.py                   # memoria -> report/memoria.pdf
+python run.py list                  # lista las tareas y sus parámetros
+python run.py solve Tier0T01_Latt   # resuelve una tarea
+python run.py all                   # resuelve todas -> results/results.md
+python -m pytest                    # tests
+python report/build.py              # memoria -> report/memoria.pdf
 ```
 
 ## Estructura
+
 ```
-data/ggh, data/lwe   ficheros de tareas
-src/pqc/lector_tareas.py lectura de ficheros por bloques -> TareaGGH / TareaLWE / TareaRingLWE (HECHO)
-src/pqc/celosias/    un fichero por algoritmo, compartido por GGH y LWE <- TODO
-                     gso.py  lll.py  babai.py  enumeracion.py  bkz.py
-src/pqc/ggh/         GGH, un fichero por metodo            <- TODO
-                     resolver.py  reduccion_babai.py  fuerza_bruta.py  celosia_modular.py  juguete.py
-src/pqc/lwe/         LWE / Ring-LWE, un fichero por metodo <- TODO
-                     resolver.py  gauss.py  fuerza_bruta.py  ataque_celosia.py  descifrado.py  ring.py
-scripts/bench.py     tiempo vs talla                   <- TODO
-tests/               parser OK; tests de algoritmos    <- TODO
-report/memoria.tex    memoria en LaTeX (5 pag., pesos 15/30/40/15); compilar: python report/build.py -> report/memoria.pdf
+data/ggh, data/lwe         ficheros de tareas (45: 22 GGH + 20 LWE + 3 Ring-LWE)
+run.py                     ejecutar las tareas desde la terminal
+src/pqc/
+  lector_tareas.py         lee los ficheros de tareas -> TareaGGH / TareaLWE / TareaRingLWE   HECHO
+  matrices.py              operaciones con vectores y matrices (exactas y modulo q)            HECHO
+  celosias/                algoritmos comunes a GGH y LWE                                      TODO
+    gso.py  lll.py  babai.py  enumeracion.py
+  ggh/                     GGH                                                                  TODO
+    resolver.py  reduccion_babai.py  fuerza_bruta.py  celosia_modular.py
+    juguete.py             GGH de juguete (generar claves, cifrar, descifrar)                  HECHO
+  lwe/                     LWE y Ring-LWE                                                       TODO
+    resolver.py  fuerza_bruta.py  ataque_celosia.py  descifrado.py  ring.py
+scripts/bench.py           tiempo frente a talla                                                TODO
+tests/                     tests (pytest)
+report/memoria.tex         memoria en LaTeX (máx. 5 páginas; pesos 15/30/40/15)
 ```
 
-## Las tareas (45 ficheros: 22 GGH + 20 LWE + 3 Ring-LWE; ver `run.py list`)
+## Convenios
+
+- **Matrices:** listas de filas de `int` o `Fraction` (aritmética exacta, sin decimales). En una base de
+  celosía cada fila es un vector, y los vectores se multiplican como filas (`x B`).
+- **LWE:** `b = A s + e (mod q)`, así que el error es `e = b - A s`. **Ring-LWE:** `b = a s + e (mod q, x^n + 1)`.
+  Fuente: Tema 11 y Ejemplo 4 del enunciado (ver `tests/test_convenios.py`). La ecuación (1) del enunciado
+  escribe "A x = b + e", pero su propio Ejemplo 4 sigue `b = A s + e` (ver `docs/algoritmos.md`, 3.3).
+- **Ring-LWE (Tema 11):** cifrado `c1 = a r + e1`, `c2 = b r + e2 + m`; descifrado `d = c2 - s c1`, y cada
+  coeficiente se asigna al polo más cercano (0 → bit 0, q/2 → bit 1).
+- **Redondeo:** `redondeo()` de `matrices.py` (los empates x,5 hacia arriba), nunca `round()` de Python.
+- Los algoritmos (LLL, Babai, enumeración...) se implementan nosotros: el enunciado valora las soluciones
+  propias y pide justificar cada algoritmo con una traza.
+
+## Las tareas (ver `python run.py list`)
+
 | Tier | GGH | LWE | Valor |
 |---|---|---|---|
-| 0 | bases ortogonales, 2D (traen solucion) | n=3-5, ruido bajo (traen solucion) | 0 |
-| 1 | dim 2-6; SVP y CVP | n=3-4; rotura y criptoanalisis | 0,3 (max 1,4) |
-| 2 | dim 4-7 | n=4-10 | 0,5 (max 1,8) |
-| 3 | dim 15 y celosias **modulares** | n=7-10, q=1223; **Ring-LWE** n=16/32/64 | 1 (sin tope) |
+| 0 | bases ortogonales, 2D (traen solución) | n=3-5, ruido bajo (traen solución) | 0 |
+| 1 | dim 2-6; SVP y CVP | n=3-4; rotura y criptoanálisis | 0,3 (máx 1,4) |
+| 2 | dim 4-7 | n=4-10 | 0,5 (máx 1,8) |
+| 3 | dim 15 y celosías **modulares** | n=7-10, q=1223; **Ring-LWE** n=16/32/64 | 1 (sin tope) |
 
-## Erratas / puntos abiertos en los datos
-- `Tier3T01_LWE` y `Tier3T03_LWE`: faltan llaves `{`/`}` (no importa: de cada bloque solo se leen los numeros).
-- `Tier0T04_LWE` y `Tier0T05_LWE`: dicen `criptograma` en vez de `criptoanalisis` (se leen como criptoanalisis).
-- `Tier1T05`, `Tier2T02`, `Tier2T04` y `Tier2T05` (LWE): algun coeficiente vale exactamente `q` (equivale a 0 mod q).
-  Es valido, pero hay que reducir mod q antes de operar.
-- Ring-LWE: el PDF no define el cifrado; el fichero habla de c1, c2. Hay que decidir/justificar el esquema.
-- GGH con "reduccion modulo n" (Tier3T01/T02/T05): el PDF solo lo menciona. Si det(B) es invertible mod n, la
-  celosia L + nZ^d es todo Z^d y el problema seria trivial: **comprobarlo** y preguntar al profesor cual es la
-  interpretacion esperada.
-- Formato de la solucion de SVP (signo del vector): no esta especificado.
+La nota de tareas tiene un tope de 4 puntos.
+
+## Erratas y puntos abiertos
+
+- `Tier3T01_LWE` y `Tier3T03_LWE`: faltan llaves `{`/`}` (no importa: de cada bloque solo se leen los números).
+- `Tier0T04_LWE` y `Tier0T05_LWE`: dicen `criptograma` en vez de `criptoanalisis` (se leen como criptoanálisis).
+- `Tier1T05`, `Tier2T02`, `Tier2T04` y `Tier2T05` (LWE): algún coeficiente vale exactamente `q` (equivale a 0):
+  reducir mod q antes de operar (`mod_matriz`).
+- Tema 11, ejemplo de Ring-LWE con q = 463: el error de la diapositiva no coincide con `b - a s`, y en c2 aparece
+  un coeficiente mayor que q (erratas del temario).
+- **Pendiente de confirmar con el profesor:** GGH con "reducción módulo n" (Tier03T01/T02/T05). En las tres,
+  det(B) es invertible mod n, así que la celosía L + nZ^d es todo Z^d y el problema sería trivial.
+- **Sin especificar:** el signo del vector solución del SVP (v y -v son igual de cortos).

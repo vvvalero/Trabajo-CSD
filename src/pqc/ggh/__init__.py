@@ -1,4 +1,4 @@
-from .juguete import decrypt, encrypt, keygen
+from .juguete import cifrar, descifrar, generar_claves
 from .resolver import solve
 
-__all__ = ["solve", "keygen", "encrypt", "decrypt"]
+__all__ = ["solve", "generar_claves", "cifrar", "descifrar"]

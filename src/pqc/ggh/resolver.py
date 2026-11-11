@@ -4,8 +4,8 @@ from __future__ import annotations
 from ..lector_tareas import TareaGGH
 
 
-def solve(task: TareaGGH) -> list[int]:
-    """Devuelve el vector solucion (SVP: vector mas corto; CVP: punto de la celosia mas cercano).
+def solve(tarea: TareaGGH) -> list[int]:
+    """Devuelve el punto solucion (SVP: vector mas corto; CVP: punto de la celosia mas cercano).
 
     Elegir estrategia segun la tarea (ver README):
       Tier0    bases (casi) ortogonales -> reduccion_babai.py basta

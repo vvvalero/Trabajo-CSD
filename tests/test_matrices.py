@@ -10,7 +10,7 @@ from pqc.matrices import (
     es_entera,
     escalar_por_vector,
     identidad,
-    inverse,
+    inversa,
     inversa_mod,
     matriz_por_vector,
     mod_matriz,
@@ -82,7 +82,7 @@ def test_es_entera():
     assert es_entera([[1, 2], [Fraction(4, 2), 0]])
     assert not es_entera([[1, Fraction(1, 2)]])
     assert es_entera([3, -1])
-    assert es_entera(producto_matrices(B_PUB, inverse(B_PRIV)))  # B' B^-1 = U entera
+    assert es_entera(producto_matrices(B_PUB, inversa(B_PRIV)))  # B' B^-1 = U entera
 
 
 # ----------------------------------------------------------------------------- exactas
@@ -95,21 +95,22 @@ def test_det():
     assert det(B_PUB) == det(U) * det(B_PRIV)
 
 
-def test_inverse_por_matriz_identidad():
+def test_inversa_por_matriz_identidad():
     A = [[2, 1, 0], [1, 3, 1], [0, 1, 4]]
-    assert producto_matrices(A, inverse(A)) == identidad(3)
+    assert producto_matrices(A, inversa(A)) == identidad(3)
 
 
-def test_inverse_con_pivote_cero():
-    assert inverse([[0, 1], [1, 0]]) == [[0, 1], [1, 0]]
+def test_inversa_con_pivote_cero():
+    assert inversa([[0, 1], [1, 0]]) == [[0, 1], [1, 0]]
 
 
-def test_inverse_exacta_y_singular():
-    assert inverse([[3, 1], [-1, 4]]) == [[Fraction(4, 13), Fraction(-1, 13)], [Fraction(1, 13), Fraction(3, 13)]]
+def test_inversa_exacta_y_singular():
+    esperada = [[Fraction(4, 13), Fraction(-1, 13)], [Fraction(1, 13), Fraction(3, 13)]]
+    assert inversa([[3, 1], [-1, 4]]) == esperada
     with pytest.raises(ValueError):
-        inverse([[1, 2], [2, 4]])
+        inversa([[1, 2], [2, 4]])
     with pytest.raises(ValueError):
-        inverse([[1, 2, 3], [4, 5, 6]])  # no cuadrada
+        inversa([[1, 2, 3], [4, 5, 6]])  # no cuadrada
 
 
 # ----------------------------------------------------------------------------- redondeo
@@ -121,9 +122,9 @@ def test_redondeo_empates_hacia_arriba():
 
 def test_redondeo_de_babai_ejemplo3():
     # Ejemplo 3: c B^-1 = (26.769, 37.308) -> y = (27, 37) -> x = y U^-1 = (7, 3)
-    y = redondeo_vector(vector_por_matriz([43, 176], inverse(B_PRIV)))
+    y = redondeo_vector(vector_por_matriz([43, 176], inversa(B_PRIV)))
     assert y == [27, 37]
-    assert vector_por_matriz(y, inverse(U)) == [7, 3]
+    assert vector_por_matriz(y, inversa(U)) == [7, 3]
 
 
 # ----------------------------------------------------------------------------- modulares

@@ -117,7 +117,8 @@ def test_error_claro_si_falta_un_vector(tmp_path):
 
 def test_error_si_rotura_trae_criptograma(tmp_path):
     # Cambiamos la linea de datos "N/A" (no la del comentario, que tambien contiene "N/A")
-    texto = (DATA / "lwe" / "Tier0T01_LWE.txt").read_text(encoding="utf-8").replace("\nN/A\n", "\n{1, 2, 3}, 4\n", 1)
+    texto = (DATA / "lwe" / "Tier0T01_LWE.txt").read_text(encoding="utf-8")
+    texto = texto.replace("\nN/A\n", "\n{1, 2, 3}, 4\n", 1)
     ruta = tmp_path / "rotura_mal.txt"
     ruta.write_text(texto, encoding="utf-8")
     with pytest.raises(ValueError, match="no cuadra con el criptograma"):
@@ -126,4 +127,4 @@ def test_error_si_rotura_trae_criptograma(tmp_path):
 
 # TODO: tests de cada algoritmo. Las tareas Tier0 traen solucion (tarea.solucion):
 #   - GGH Tier0T01..T05: ggh.solve(t) == t.solucion
-#   - LWE Tier0T01..T05: lwe.break_key / decrypt_bit == t.solucion
+#   - LWE Tier0T01..T05: lwe.romper_clave / lwe.descifrar_bit == t.solucion
