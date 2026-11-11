@@ -1,10 +1,17 @@
 """Algebra lineal exacta sobre listas de filas (int o Fraction), compartida por ggh, celosias y lwe.
 
-Convenio: una matriz es una lista de filas; los vectores se tratan como filas (x B, no B x).
+Convenio de todo el proyecto: una matriz es una lista de filas de int o Fraction (aritmetica exacta,
+sin numpy); una base de celosia tiene un vector por FILA; los vectores se tratan como filas (x B, no B x).
 """
 from __future__ import annotations
 
 from fractions import Fraction
+from typing import List, Union
+
+# Alias con typing (no "int | Fraction") para que funcione tambien en Python 3.9 (README).
+Numero = Union[int, Fraction]
+Vector = List[Numero]
+Matriz = List[List[Numero]]   # lista de filas
 
 
 def producto_matrices(X, Y):

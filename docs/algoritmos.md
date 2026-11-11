@@ -149,6 +149,10 @@ Origen de cada pieza:
 - **Convenio de signos:** b = A·s + e, así que el error es e = b − A·s. Equivocarse de signo da
   secretos falsos que parecen plausibles, porque el residuo sale pequeño solo en las ecuaciones usadas
   para despejar.
+  - **Fuente del convenio:**
+    - Tema 11: "b = A·sᵀ + e mod m"; en Ring-LWE, "b = a·s + e (mod q, xⁿ + 1)".
+    - Enunciado, Ejemplo 4, comprobado numéricamente: con S = (4, 70, 0, 3) y q = 71 se obtiene
+      A·S mod 71 = (35, 50, 33, 59, 9), y b − A·S = (−3, 3, −2, 0, 2), que es exactamente su E.
 - **Verificación:** con el secreto encontrado, *todos* los residuos centrados deben ser pequeños (±15 en
   Tier 3). Que haya una única solución así entre q^n candidatos es una prueba muy sólida.
 
@@ -163,6 +167,10 @@ xⁿ ≡ −1.
 ### 4.2 Esquema (Tema 11)
 
 - Clave: b = a·s + e.
+  - Comprobación del ejemplo del Tema 11 (q = 463, n = 8): b − a·s sale (−1, 0, 0, −1, 1, 0, 0, 0), un
+    error pequeño. Esto confirma la estructura b = a·s + e en x⁸ + 1, pero no coincide con el e que
+    escribe la diapositiva (probable errata del temario). En el mismo ejemplo, el coeficiente "3065x³"
+    de c2 es mayor que q, otra errata.
 - Cifrado: c1 = a·r + e1, c2 = b·r + e2 + m, donde m codifica cada bit como 0 o ⌊q/2⌉.
 - Descifrado: d = c2 − s·c1. Cada coeficiente se asigna al polo más cercano (0 → bit 0, ⌊q/2⌉ → bit 1).
 

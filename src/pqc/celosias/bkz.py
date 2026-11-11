@@ -1,8 +1,8 @@
 """Opcional (tiers altos): BKZ-beta."""
 from __future__ import annotations
 
-import numpy as np
+from ..matrices import Matriz
 
 
-def bkz(B: np.ndarray, beta: int = 20) -> np.ndarray:
+def bkz(B: Matriz, beta: int = 20) -> list[list[int]]:
     raise NotImplementedError  # TODO

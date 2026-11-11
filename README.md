@@ -2,8 +2,13 @@
 
 GGH (SVP/CVP en celosias) y LWE / Ring-LWE. Enunciado: `docs/enunciado.pdf`.
 
-## Lenguaje: Python 3.13 + numpy
-- Aritmetica entera de precision arbitraria (modulos, determinantes, HNF) y numpy para el GSO.
+## Lenguaje: Python 3.13
+- Convenio: matrices como **listas de filas de `int` / `Fraction`** (aritmetica exacta, ver `src/pqc/matrices.py`);
+  una base de celosia tiene un vector por fila. GSO y LLL exactos, sin errores de redondeo en la condicion de Lovasz.
+- numpy solo donde no hace falta exactitud (vectorizar la fuerza bruta, bench) y matplotlib para las graficas.
+- Convenio LWE: b = A s + e (mod q), luego el error es e = b - A s; Ring-LWE: b = a s + e (mod q, x^n + 1).
+  Fuente: Tema 11 y Ejemplo 4 del enunciado (verificado en `tests/test_convenios.py`). La ec. (1) del
+  enunciado escribe "A x = b + e", pero su propio Ejemplo 4 sigue b = A s + e (ver `docs/algoritmos.md`, 3.3).
 - Implementar LLL, enumeracion y Babai uno mismo encaja con lo que se evalua (justificar el algoritmo, traza, soluciones propias).
 - Plan B si algun tier grande es lento en Python: pasar el bucle caliente a C (hay `gcc`) o usar fpylll desde WSL (hay Ubuntu).
 
