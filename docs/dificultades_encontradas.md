@@ -22,4 +22,19 @@ resultado:
 - Recalcular `gso` solo cuando b_k cambia (cuando r ≠ 0), no en cada vuelta del bucle.
 
 Con eso, la tarea GGH más grande (dimensión 15) pasa a tardar 0,5 s, y los 26 tests de LLL ~1 s.
-Pendiente: medir con las celosías del ataque a LWE (dimensión hasta 31).
+
+**LLL sigue siendo lento con las celosías del ataque a LWE.** Medido con la celosía del ataque primal
+(dimensión = número de ecuaciones + 1). El resultado es correcto en todos los casos (encuentra el error),
+pero el tiempo crece muy deprisa con la dimensión:
+
+| Tarea | Dimensión | Tiempo | Error encontrado |
+|---|---|---|---|
+| Tier2T01_LWE | 13 | 1,1 s | ±4 |
+| Tier1T05_LWE | 17 | 4,9 s | ±4 |
+| Tier3T02_LWE | 17 | 8,4 s | ±15 |
+| Tier3T01_LWE | 19 | 14,0 s | ±13 |
+| Tier2T05_LWE | 31 | 329,7 s (5,5 min) | ±6 |
+
+Causa: cada llamada a `gso` recalcula todo con fracciones de muchas cifras, y en dimensión 19 hay unas
+4500 llamadas. Posible solución (pendiente de decidir antes de LWE): al hacer b_k ← b_k − r·b_j, actualizar
+μ directamente (`mu[k][j] -= r` y `mu[k][i] -= r * mu[j][i]` para i < j) en vez de recalcular `gso`.
