@@ -13,6 +13,8 @@ justificadas) y para preparar la defensa.
 - `celosias/gso.py`: Gram-Schmidt exacto.
 - `celosias/lll.py`: LLL.
 - `celosias/babai.py`: Babai por redondeo y por plano más cercano. Con LLL + Babai salen las 5 tareas Tier0 de GGH.
+- `ggh/reduccion_babai.py` y `ggh/resolver.py`: ataque LLL + Babai (plano más cercano) conectado a `run.py`.
+  Resuelve las 19 tareas GGH sin módulo (la más lenta, dimensión 15, en 0,44 s). Faltan las 3 modulares.
 
 ### Dificultades y decisiones
 
@@ -39,3 +41,11 @@ pero el tiempo crece muy deprisa con la dimensión:
 Causa: cada llamada a `gso` recalcula todo con fracciones de muchas cifras, y en dimensión 19 hay unas
 4500 llamadas. Posible solución (pendiente de decidir antes de LWE): al hacer b_k ← b_k − r·b_j, actualizar
 μ directamente (`mu[k][j] -= r` y `mu[k][i] -= r * mu[j][i]` para i < j) en vez de recalcular `gso`.
+
+**LLL + Babai no siempre da el punto más cercano.** Comprobado en las tareas GGH de dimensión ≤ 7
+probando todas las combinaciones x·R con x en [-2, 2]^d (R la base reducida por LLL):
+- SVP: en las 6 tareas ningún x·R ≠ 0 es más corto que el que da LLL.
+- CVP: sumando x·R al punto de Babai, en 9 de 10 no sale ninguno más cercano. En **Tier02T03** Babai (plano más cercano) da
+  distancia² 186 (el redondeo, 187) y existe un punto a distancia² **155**.
+
+Es la razón para tener también la enumeración: LLL + Babai es rápido pero aproximado.

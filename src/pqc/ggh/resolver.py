@@ -2,14 +2,18 @@
 from __future__ import annotations
 
 from ..lector_tareas import TareaGGH
+from . import reduccion_babai
+from .celosia_modular import base_modular
 
 
 def solve(tarea: TareaGGH) -> list[int]:
     """Devuelve el punto solucion (SVP: vector mas corto; CVP: punto de la celosia mas cercano).
 
-    Elegir estrategia segun la tarea (ver README):
-      Tier0    bases (casi) ortogonales -> reduccion_babai.py basta
-      Tier1/2  dimension pequena -> fuerza_bruta.py o enumeracion; comparar con LLL + Babai
-      Tier3    'Reduccion modulo n' -> celosia_modular.py (ver punto abierto del README)
+    Por ahora todas las tareas van por LLL + Babai (reduccion_babai.py). Cuando esten la
+    enumeracion y la fuerza bruta se podra comparar y elegir.
+    Las tareas con "reduccion modulo n" (Tier3) cambian antes la base (celosia_modular.py).
     """
-    raise NotImplementedError  # TODO
+    base = tarea.base
+    if tarea.modulo:
+        base = base_modular(base, tarea.modulo)
+    return reduccion_babai.ataque(base, tarea.objetivo)

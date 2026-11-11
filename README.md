@@ -38,8 +38,9 @@ src/pqc/
   celosias/                algoritmos comunes a GGH y LWE
     gso.py  lll.py  babai.py                                                                   HECHO
     enumeracion.py                                                                             TODO
-  ggh/                     GGH                                                                  TODO
-    resolver.py  reduccion_babai.py  fuerza_bruta.py  celosia_modular.py
+  ggh/                     GGH
+    resolver.py  reduccion_babai.py                                                            HECHO
+    fuerza_bruta.py  celosia_modular.py                                                        TODO
     juguete.py             GGH de juguete (generar claves, cifrar, descifrar)                  HECHO
   lwe/                     LWE y Ring-LWE                                                       TODO
     resolver.py  fuerza_bruta.py  ataque_celosia.py  descifrado.py  ring.py
