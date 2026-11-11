@@ -12,6 +12,7 @@ justificadas) y para preparar la defensa.
 - `lector_tareas.py`: lectura de los ficheros por bloques, con validaciones.
 - `celosias/gso.py`: Gram-Schmidt exacto.
 - `celosias/lll.py`: LLL.
+- `celosias/babai.py`: Babai por redondeo y por plano más cercano. Con LLL + Babai salen las 5 tareas Tier0 de GGH.
 
 ### Dificultades y decisiones
 
