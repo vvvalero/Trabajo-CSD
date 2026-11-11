@@ -11,6 +11,7 @@ Grupo: Óscar García García y Valentín Valero Jiménez. Entrega: 16/11/2026.
 | `docs/enunciado.pdf` | Enunciado del trabajo y criterios de evaluación |
 | `docs/MUCC - Criptologia MUCC Tema-11-1.pdf` | Temario (Tema 11): GGH, LWE y Ring-LWE con ejemplos |
 | `docs/algoritmos.md` | Qué hace cada algoritmo, por qué funciona y por qué lo usamos (para la memoria y la defensa) |
+| `docs/dificultades_encontradas.md` | Progreso del trabajo, dificultades encontradas y decisiones tomadas |
 
 ## Uso (Windows y macOS)
 
