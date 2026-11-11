@@ -35,8 +35,9 @@ run.py                     ejecutar las tareas desde la terminal
 src/pqc/
   lector_tareas.py         lee los ficheros de tareas -> TareaGGH / TareaLWE / TareaRingLWE   HECHO
   matrices.py              operaciones con vectores y matrices (exactas y modulo q)            HECHO
-  celosias/                algoritmos comunes a GGH y LWE                                      TODO
-    gso.py  lll.py  babai.py  enumeracion.py
+  celosias/                algoritmos comunes a GGH y LWE
+    gso.py  lll.py  babai.py                                                                   HECHO
+    enumeracion.py                                                                             TODO
   ggh/                     GGH                                                                  TODO
     resolver.py  reduccion_babai.py  fuerza_bruta.py  celosia_modular.py
     juguete.py             GGH de juguete (generar claves, cifrar, descifrar)                  HECHO
