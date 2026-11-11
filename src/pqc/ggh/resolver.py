@@ -1,10 +1,10 @@
 """Punto de entrada GGH: resolver una tarea SVP / CVP."""
 from __future__ import annotations
 
-from ..tareas import GGHTask
+from ..lector_tareas import TareaGGH
 
 
-def solve(task: GGHTask) -> list[int]:
+def solve(task: TareaGGH) -> list[int]:
     """Devuelve el vector solucion (SVP: vector mas corto; CVP: punto de la celosia mas cercano).
 
     Elegir estrategia segun la tarea (ver README):

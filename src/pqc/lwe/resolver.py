@@ -1,10 +1,10 @@
 """Rotura de clave LWE: recuperar el vector de secretos s."""
 from __future__ import annotations
 
-from ..tareas import LWETask
+from ..lector_tareas import TareaLWE
 
 
-def break_key(task: LWETask) -> list[int]:
+def break_key(task: TareaLWE) -> list[int]:
     """Recupera s tal que A s + e = b (mod q), con e pequeno.
 
     Convenio (Tema 11 y Ejemplo 4 del enunciado): b = A s + e, luego e = b - A s (centrado en (-q/2, q/2]).

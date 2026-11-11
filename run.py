@@ -12,29 +12,35 @@ ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from pqc import ggh, lwe  # noqa: E402
-from pqc.tareas import GGHTask, load_all  # noqa: E402
+from pqc.lector_tareas import TareaGGH, TareaRingLWE, leer_todas  # noqa: E402
 
 
 def solve_task(t):
-    if isinstance(t, GGHTask):
+    if isinstance(t, TareaGGH):
         return ggh.solve(t)
-    if t.kind == "ringlwe":
+    if isinstance(t, TareaRingLWE):
         s = lwe.break_ring_key(t)
         return lwe.decrypt_ring(t, s)
     s = lwe.break_key(t)
-    return s if t.kind == "rotura" else lwe.decrypt_bit(t, s)
+    return s if t.problema == "rotura" else lwe.decrypt_bit(t, s)
+
+
+def describir(t):
+    """Una linea con los parametros de la tarea (para 'list')."""
+    if isinstance(t, TareaGGH):
+        return f"GGH {t.problema} dim={t.dim}" + (f" mod={t.modulo}" if t.modulo else "")
+    if isinstance(t, TareaRingLWE):
+        return f"Ring-LWE n={t.n} q={t.q}"
+    return f"LWE {t.problema} n={t.n} q={t.q} m={len(t.A)}"
 
 
 def main(argv):
-    tasks = load_all(ROOT / "data")
-    allt = {t.name: t for ts in tasks.values() for t in ts}
+    tareas = leer_todas(ROOT / "data")
+    allt = {t.nombre: t for lista in tareas.values() for t in lista}
     cmd = argv[1] if len(argv) > 1 else "list"
     if cmd == "list":
         for t in allt.values():
-            extra = f"{t.kind} dim={t.dim}" + (f" mod={t.modulus}" if isinstance(t, GGHTask) and t.modulus else "")
-            if not isinstance(t, GGHTask):
-                extra += f" q={t.q}" + (f" m={len(t.A)}" if t.A else "")
-            print(f"{t.name:20s} {extra}")
+            print(f"{t.nombre:20s} {describir(t)}")
     elif cmd in ("solve", "all"):
         names = [argv[2]] if cmd == "solve" else list(allt)
         rows = []
@@ -44,8 +50,8 @@ def main(argv):
                 res = solve_task(allt[n])
             except NotImplementedError:
                 res = "TODO"
-            rows.append((n, res, allt[n].expected, time.perf_counter() - t0))
-            print(f"{n:20s} {res} (esperado: {allt[n].expected}) {rows[-1][3]:.3f}s")
+            rows.append((n, res, allt[n].solucion, time.perf_counter() - t0))
+            print(f"{n:20s} {res} (esperado: {allt[n].solucion}) {rows[-1][3]:.3f}s")
         if cmd == "all":
             out = ["| tarea | resultado | esperado | s |", "|---|---|---|---|"]
             out += [f"| {n} | {r} | {e} | {s:.3f} |" for n, r, e, s in rows]

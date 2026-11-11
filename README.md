@@ -31,7 +31,7 @@ python report/build.py                   # memoria -> report/memoria.pdf
 ## Estructura
 ```
 data/ggh, data/lwe   ficheros de tareas
-src/pqc/tareas.py     parser (HECHO, tolerante a erratas)
+src/pqc/lector_tareas.py lectura de ficheros por bloques -> TareaGGH / TareaLWE / TareaRingLWE (HECHO)
 src/pqc/celosias/    un fichero por algoritmo, compartido por GGH y LWE <- TODO
                      gso.py  lll.py  babai.py  enumeracion.py  bkz.py
 src/pqc/ggh/         GGH, un fichero por metodo            <- TODO
@@ -43,7 +43,7 @@ tests/               parser OK; tests de algoritmos    <- TODO
 report/memoria.tex    memoria en LaTeX (5 pag., pesos 15/30/40/15); compilar: python report/build.py -> report/memoria.pdf
 ```
 
-## Las tareas (45 ficheros: 22 GGH + 23 LWE; ver `run.py list`)
+## Las tareas (45 ficheros: 22 GGH + 20 LWE + 3 Ring-LWE; ver `run.py list`)
 | Tier | GGH | LWE | Valor |
 |---|---|---|---|
 | 0 | bases ortogonales, 2D (traen solucion) | n=3-5, ruido bajo (traen solucion) | 0 |
@@ -52,8 +52,8 @@ report/memoria.tex    memoria en LaTeX (5 pag., pesos 15/30/40/15); compilar: py
 | 3 | dim 15 y celosias **modulares** | n=7-10, q=1223; **Ring-LWE** n=16/32/64 | 1 (sin tope) |
 
 ## Erratas / puntos abiertos en los datos
-- `Tier3T01_LWE` y `Tier3T03_LWE`: faltan llaves `{`/`}` (el parser las ignora).
-- `Tier0T04_LWE`: dice `criptograma` en vez de `criptoanalisis`.
+- `Tier3T01_LWE` y `Tier3T03_LWE`: faltan llaves `{`/`}` (no importa: de cada bloque solo se leen los numeros).
+- `Tier0T04_LWE` y `Tier0T05_LWE`: dicen `criptograma` en vez de `criptoanalisis` (se leen como criptoanalisis).
 - `Tier1T05`, `Tier2T02`, `Tier2T04` y `Tier2T05` (LWE): algun coeficiente vale exactamente `q` (equivale a 0 mod q).
   Es valido, pero hay que reducir mod q antes de operar.
 - Ring-LWE: el PDF no define el cifrado; el fichero habla de c1, c2. Hay que decidir/justificar el esquema.
