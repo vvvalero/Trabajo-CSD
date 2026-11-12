@@ -58,6 +58,10 @@ Es la razón para tener también la enumeración: LLL + Babai es rápido pero ap
 - `celosias/lll.py` acelerado: se llama a `gso` una sola vez al principio y después solo se actualizan
   los valores de μ y ||b*||² que cambian. Mismo resultado: las 22 tareas GGH dan exactamente la misma base
   que con la versión anterior, y pasan los 158 tests.
+- Memoria preparada (sin redactar), con estilo sobrio y las 4 secciones del enunciado: diseño en
+  `report/estilo.tex`, una sección por fichero en `report/secciones/`, esquema del trabajo, figura de base
+  mala/buena, un apartado por algoritmo (idea, por qué funciona, coste), tabla de estado de tareas con la
+  puntuación calculada sola, trazas y gráfica de tiempos que se activa con los CSV de `report/datos/`.
 
 ### Dificultades y decisiones
 

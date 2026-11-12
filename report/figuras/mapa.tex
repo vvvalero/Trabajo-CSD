@@ -1,0 +1,40 @@
+% Esquema del trabajo: de los datos de cada criptosistema a la solucion, y el nucleo comun.
+% Cada fila es un criptosistema. Ajustar los textos cuando esten decididos los metodos
+% definitivos de cada tier.
+\begin{tikzpicture}[
+    paso/.style={draw,line width=0.4pt,text width=2.95cm,minimum height=0.9cm,
+                 align=center,font=\footnotesize,inner sep=2pt},
+    fila/.style={font=\footnotesize\bfseries,text width=1.3cm,align=left,inner sep=0pt},
+    flecha/.style={-{Stealth[length=3.5pt]},line width=0.4pt},
+    node distance=0.3cm and 0.45cm]
+
+  \node[fila] (Lg) {GGH};
+  \node[paso,right=0.2cm of Lg] (g1) {Base pública $B$\\y objetivo $c$};
+  \node[paso,right=of g1] (g2) {LLL:\\base reducida};
+  \node[paso,right=of g2] (g3) {Babai /\\enumeración};
+  \node[paso,right=of g3] (g4) {Punto $v$\\(SVP / CVP)};
+
+  \node[fila,below=0.95cm of Lg] (Ll) {LWE};
+  \node[paso,right=0.2cm of Ll] (l1) {Sistema $(A, b)$,\\$b = As + e$};
+  \node[paso,right=of l1] (l2) {Celosía primal\\(embedding)};
+  \node[paso,right=of l2] (l3) {LLL: aparece\\el error $e$};
+  \node[paso,right=of l3] (l4) {Secreto $s$\\y bit descifrado};
+
+  \node[fila,below=0.95cm of Ll] (Lr) {Ring-LWE};
+  \node[paso,right=0.2cm of Lr] (r1) {$(a, b)$ y\\criptograma $(c_1, c_2)$};
+  \node[paso,right=of r1] (r2) {Sistema lineal en $\mathbb{Z}$\\(sin reducir mod $q$)};
+  \node[paso,right=of r2] (r3) {Resolver y\\redondear: $s$};
+  \node[paso,right=of r3] (r4) {$d = c_2 - s\,c_1$:\\palabra de bits};
+
+  \foreach \f in {g,l,r}{
+    \draw[flecha] (\f1) -- (\f2);
+    \draw[flecha] (\f2) -- (\f3);
+    \draw[flecha] (\f3) -- (\f4);}
+
+  % Nucleo comun: recuadro discontinuo bajo las tres filas, del ancho de r1 a r4
+  \draw[dashed,line width=0.4pt] ([yshift=-0.4cm]r1.south west) rectangle
+                                 ([yshift=-1.1cm]r4.south east);
+  \node[font=\footnotesize] at ($([yshift=-0.75cm]r1.south west)!0.5!([yshift=-0.75cm]r4.south east)$)
+    {\textit{Núcleo común (propio, exacto):}\enspace
+     matrices, Gram-Schmidt, LLL, Babai, enumeración};
+\end{tikzpicture}
