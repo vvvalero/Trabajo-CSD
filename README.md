@@ -47,6 +47,10 @@ src/pqc/
 scripts/bench.py           tiempo frente a talla                                                TODO
 tests/                     tests (pytest)
 report/memoria.tex         memoria en LaTeX (máx. 5 páginas; pesos 15/30/40/15)
+  estilo.tex               diseño (sobrio, sin color): algoritmos, trazas, tabla de tareas
+  secciones/               una sección por fichero (contenido)
+  figuras/                 diagramas TikZ y gráfica de tiempos
+  datos/                   CSV de tiempos para la gráfica (los genera scripts/bench.py)
 ```
 
 ## Convenios

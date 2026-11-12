@@ -1,0 +1,133 @@
+% =============================================================================
+% Estilo de la memoria: sobrio y academico (sin color, tipografia Times).
+% Aqui solo hay DISEÑO. El contenido esta en secciones/, las figuras en figuras/.
+%
+% Lo que se usa al escribir (ver ejemplos en secciones/):
+%   \pendiente{...}        texto gris en cursiva: lo que falta por escribir (borrar al redactar)
+%   \falta{...}            lo mismo, dentro de una linea (tablas, trazas)
+%   \paragraph{Nombre.} ...                  parrafo de un algoritmo (titulo en negrita en linea)
+%   algorithmic (paquete algpseudocode)       pseudocodigo, con palabras clave en castellano
+%   \begin{traza}{titulo} ... \end{traza}    traza de ejecucion (texto monoespaciado)
+%   \tier{n} \est{ok|aprox|pend}             casillas de la tabla de tareas (3_tareas.tex)
+%   \puntuacion                              puntos calculados con las casillas "ok"
+% =============================================================================
+
+% ---------------------------------------------------------------- Fuentes
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath}
+\usepackage{newtxtext,newtxmath}        % Times para texto y matematicas
+\usepackage[scaled=0.9]{zi4}            % monoespaciada (Inconsolata) para trazas
+\usepackage{microtype}                  % mejor reparto de espacios: ahorra lineas
+
+% ---------------------------------------------------------------- Pagina
+% Enunciado: max. 5 paginas, fuente 12 pt, margenes <= 2,54 cm, interlineado simple.
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\pagestyle{plain}                       % solo el numero de pagina, abajo
+
+% ---------------------------------------------------------------- Paquetes
+\usepackage{booktabs,tabularx,array,multirow}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}                      % [H]: la tabla o figura va justo donde se escribe
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\usepackage{tikz}
+\usetikzlibrary{babel,arrows.meta,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[font=small,labelfont=bf,labelsep=period]{caption}
+\usepackage{algorithm,algpseudocode}    % pseudocodigo (Algoritmo 1: LLL)
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{gris}{gray}{0.45}          % unico color: marcas de "pendiente"
+
+% ---------------------------------------------------------------- Titulos de seccion
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{10pt plus 2pt minus 2pt}{4pt}
+\titlespacing*{\subsection}{0pt}{6pt plus 2pt minus 1pt}{2pt}
+
+% ---------------------------------------------------------------- Titulo
+% \cabecera{titulo}{autores}{asignatura}: bloque de titulo centrado.
+\newcommand{\cabecera}[3]{%
+  \begin{center}
+    {\LARGE\bfseries #1\par}\vspace{8pt}
+    {\large #2\par}\vspace{3pt}
+    {\small\itshape #3\par}
+  \end{center}\vspace{-2pt}}
+
+% ---------------------------------------------------------------- Pendientes
+% Antes de entregar no debe quedar ninguno: buscar "\pendiente" y "\falta" en secciones/.
+\newcommand{\pendiente}[1]{\par{\small\itshape\color{gris}[Pendiente: #1]\par}}
+\newcommand{\falta}[1]{\leavevmode{\normalfont\small\itshape\color{gris}[#1]}}
+
+% ---------------------------------------------------------------- Parrafos de algoritmo
+% \paragraph{Babai.} texto...  -> titulo en negrita al principio de la linea, sin numero.
+\titleformat{\paragraph}[runin]{\normalfont\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\paragraph}{0pt}{3pt plus 1pt}{0.5em}
+
+% ---------------------------------------------------------------- Pseudocodigo en castellano
+\floatname{algorithm}{Algoritmo}
+\captionsetup[algorithm]{singlelinecheck=false}   % titulo del algoritmo alineado a la izquierda
+\algrenewcommand\algorithmicrequire{\textbf{Entrada:}}
+\algrenewcommand\algorithmicensure{\textbf{Salida:}}
+\algrenewcommand\algorithmicwhile{\textbf{mientras}}
+\algrenewcommand\algorithmicfor{\textbf{para}}
+\algrenewcommand\algorithmicdo{\textbf{hacer}}
+\algrenewcommand\algorithmicif{\textbf{si}}
+\algrenewcommand\algorithmicthen{\textbf{entonces}}
+\algrenewcommand\algorithmicelse{\textbf{si no}}
+\algrenewcommand\algorithmicend{\textbf{fin}}
+\algrenewcommand\algorithmicreturn{\textbf{devolver}}
+\algrenewcommand\algorithmiccomment[1]{\hfill{\itshape\footnotesize #1}}
+
+% ---------------------------------------------------------------- Traza de ejecucion
+% Resultados intermedios de una ejecucion real (lo pide el enunciado), entre dos filetes.
+%   \begin{traza}{Tier0T01\_Latt (LLL + Babai)}
+%   base reducida: ...\\
+%   \end{traza}
+\newenvironment{traza}[1]
+  {\par\smallskip\noindent{\small\textbf{Traza.} #1}\par\nopagebreak
+   \noindent\rule{\linewidth}{0.4pt}\par\nopagebreak\vspace{1pt}
+   \noindent\begin{minipage}{\linewidth}\ttfamily\small}
+  {\end{minipage}\par\nopagebreak\vspace{1pt}\noindent\rule{\linewidth}{0.4pt}\par\smallskip}
+
+% ---------------------------------------------------------------- Tabla de tareas
+% \est{estado}: ok = resuelta y comprobada, aprox = resuelta sin certificar el optimo,
+% pend = pendiente. Las "ok" se cuentan por tier (\tier{n} al principio de cada fila)
+% y \puntuacion calcula los puntos con los maximos del enunciado.
+\newcounter{oktierA}\newcounter{oktierB}\newcounter{oktierC}
+\newcommand{\tieractual}{0}
+\newcommand{\tier}[1]{\gdef\tieractual{#1}}
+\newcommand{\est}[1]{%
+  \ifnum\pdfstrcmp{#1}{ok}=0
+    \ifnum\tieractual=1 \stepcounter{oktierA}\fi
+    \ifnum\tieractual=2 \stepcounter{oktierB}\fi
+    \ifnum\tieractual=3 \stepcounter{oktierC}\fi
+    $\checkmark$%
+  \else\ifnum\pdfstrcmp{#1}{aprox}=0 $\approx$%
+  \else --\fi\fi}
+% Tier 1: 0,3 pts (max 1,4); Tier 2: 0,5 (max 1,8); Tier 3: 1 (sin max); total max 4.
+\newcommand{\puntuacion}{%
+  \pgfmathsetmacro{\pA}{min(0.3*\value{oktierA},1.4)}%
+  \pgfmathsetmacro{\pB}{min(0.5*\value{oktierB},1.8)}%
+  \pgfmathsetmacro{\pC}{1.0*\value{oktierC}}%
+  \pgfmathsetmacro{\pT}{min(\pA+\pB+\pC,4)}%
+  \def\num##1{\pgfmathprintnumber[fixed,fixed zerofill,precision=1,use comma]{##1}}%
+  Tier~1: \num{\pA}; Tier~2: \num{\pB}; Tier~3: \num{\pC}; \textbf{total: \num{\pT}\,/\,4}}
+
+% ---------------------------------------------------------------- Tablas
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% ---------------------------------------------------------------- Aviso de longitud
+% Si la memoria pasa de 5 paginas, aparece un aviso al final (y en el log).
+\AtEndDocument{%
+  \ifnum\value{page}>5
+    \par\medskip\noindent{\small\itshape\color{gris}%
+      [Aviso: la memoria tiene \thepage\ páginas; el máximo son 5.]}%
+    \PackageWarningNoLine{memoria}{La memoria pasa de 5 paginas}%
+  \fi}
