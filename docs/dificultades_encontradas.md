@@ -86,3 +86,40 @@ dos puntos se ganan dos órdenes de magnitud:
 Con esto, las 15 celosías primales de LWE Tier1 a Tier3 se reducen en menos de 1 s cada una (la mayor,
 Tier3T05, de dimensión 31, en 0,83 s). En todas, LLL deja en la base una fila acabada en ±1 que
 contiene el error (con valores hasta ±15 en Tier3).
+
+## 13/11/2026
+
+### Hecho
+- `lwe/fuerza_bruta.py`: se prueban todos los errores posibles de las n primeras ecuaciones, se despeja s
+  con la inversa módulo q y se comprueba que el error de **todas** las ecuaciones es pequeño.
+- `lwe/descifrado.py`: R = C·s mod q y d = B − R centrado; bit 0 si |d| < q/4, bit 1 si no.
+- `lwe/resolver.py`: fuerza bruta con error_max = 0, 1, 2… hasta 10⁵ intentos. Con error_max = 0 es
+  simplemente resolver el sistema (Tier0T01/T02 no tienen error).
+- Resultado: las 5 Tier0 coinciden con la solución del fichero; salen las 5 Tier1 y Tier2T01/T02.
+  Quedan para el ataque de celosía Tier2T03–T05 y las 5 Tier3 (n grande o error grande).
+
+| Tarea | n | Error máximo | Tiempo |
+|---|---|---|---|
+| Tier0T01/T02 | 3–4 | 0 | 0,00 s |
+| Tier0T03–T05 | 4–5 | ±1 | 0,00 s |
+| Tier1T01/T03 | 3 | ±1 | 0,00 s |
+| Tier1T02/T04 | 3 | ±4 | 0,01 s |
+| Tier1T05 | 4 | ±4 | 0,09 s |
+| Tier2T01 | 4 | ±4 | 0,10 s |
+| Tier2T02 | 5 | ±4 | 1,4 s |
+
+### Dificultades y decisiones
+
+**Con pocas ecuaciones de sobra la fuerza bruta da un secreto falso.** En el Ejemplo 4 del enunciado
+(4 incógnitas, 5 ecuaciones, errores hasta ±3) solo sobra una ecuación para comprobar, y el primer
+candidato que pasa el filtro es (11, 25, 5, 51), no el secreto (4, 70, 0, 3). En las tareas no pasa:
+traen unas 3 veces más ecuaciones que incógnitas, y la probabilidad de que un s falso deje todas las
+ecuaciones sobrantes con error pequeño es despreciable (Tier1T02: 9³ candidatos, 9 ecuaciones de sobra,
+cada una pasa con probabilidad 9/379 → 729·(9/379)⁹ ≈ 10⁻¹²).
+Comprobado además recorriendo **todos** los s posibles (q³, unos 54 millones con q = 379) en las 5 tareas
+con n = 3: en cada una solo hay un s con los errores tan pequeños, y es el que da la fuerza bruta.
+
+**El descifrado no queda en duda.** En las 6 tareas de criptoanálisis Tier0/Tier1, d = B − R está muy
+lejos del umbral q/4:
+- bit 0: d = 0, −1 o −3 (cerca de 0);
+- bit 1: d = 114 con q = 229 y d = −183 con q = 379 (cerca de ±q/2).
