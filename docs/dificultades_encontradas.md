@@ -86,3 +86,36 @@ dos puntos se ganan dos órdenes de magnitud:
 Con esto, las 15 celosías primales de LWE Tier1 a Tier3 se reducen en menos de 1 s cada una (la mayor,
 Tier3T05, de dimensión 31, en 0,83 s). En todas, LLL deja en la base una fila acabada en ±1 que
 contiene el error (con valores hasta ±15 en Tier3).
+
+### Enumeración exacta de GGH
+
+- Implementada la enumeración SVP/CVP por distancias con orden Schnorr-Euchner en
+  `celosias/enumeracion.py`. Gram-Schmidt descompone la distancia en sumandos no negativos:
+  se descarta una rama cuando no puede mejorar el candidato actual. El cero se excluye en SVP.
+- Las cotas se calculan sin decimales ni raíces aproximadas: si el centro es p/q, se
+  acota el entero `q*x-p` mediante `isqrt`. Así no se pierde una solución por redondeos
+  de coma flotante, incluso con multiplicadores grandes.
+- `ggh/resolver.py` conecta LLL con la enumeración. El método aproximado LLL + Babai
+  permanece separado en `reduccion_babai.py` para compararlo.
+- Las 19 tareas sin módulo terminan, incluidas las dos de dimensión 15. En Tier02T03
+  la distancia² baja de 186 (Babai) al óptimo 155. Las 5 Tier0 siguen coincidiendo con
+  la referencia. La mención anterior a «resolver 19 tareas» describía candidatos;
+  ahora la ruta por defecto completa la búsqueda exacta.
+- 63 pruebas nuevas: contraste con fuerza bruta sobre puntos del espacio en casos
+  pequeños, ceros y empates, racionales, coordenadas grandes, regresión de Tier02T03
+  e integración de las 19 tareas. Total: **221 tests pasan**.
+- `results/ggh_exactos.csv` guarda resultados, nodos y tiempos de una ejecución local.
+  Sigue pendiente el estudio comparativo de tiempos. Las 3 tareas modulares y LWE
+  no se han implementado en este paso.
+
+### Revisión de la enumeración
+
+- Revisión de las cotas exactas, el orden que justifica detener una rama y los
+  cambios de radio: 1500 contrastes directos de cotas y orden y 510 casos aleatorios
+  SVP/CVP en dimensiones 2 a 4, comparados con un oráculo independiente sobre puntos
+  enteros. No se encontraron discrepancias.
+- Añadida una regresión con objetivo racional y varias mejoras sucesivas del radio.
+  Total de la batería permanente: **222 tests pasan**.
+- El CSV estaba ignorado por Git y faltaba un comando para reproducirlo. Se añade
+  `scripts/resultados_ggh.py`, que regenera los 19 resultados y sus estadísticas,
+  comprueba pertenencia y referencias y separa los tiempos de LLL y enumeración.
