@@ -1,0 +1,52 @@
+\subsection{Candidato inicial y cota de búsqueda}
+En CVP utilizamos Babai del plano más cercano: desde el último vector al primero,
+proyectamos el residuo sobre $b_i^*$, redondeamos y restamos el múltiplo correspondiente
+de $b_i$. Se obtiene un punto válido, aunque no necesariamente el más próximo.
+El redondeo simultáneo de $tB^{-1}$ es otra variante implementada para comparación.
+Los empates se redondean hacia arriba. En SVP elegimos como candidato el vector
+más corto entre las filas de la base reducida; puede haber combinaciones aún más cortas.
+
+Si el candidato es $v_0$, fijamos $R^2=\|v_0-t\|^2$, con $t=0$ en SVP. Cualquier
+solución mejor debe estar dentro de ese radio. Si un CVP ya tiene distancia cero,
+el candidato es óptimo y la búsqueda termina.
+
+\subsection{Enumeración exacta y justificación del óptimo}
+Para $v=\sum_i x_i b_i$, Gram-Schmidt expresa la distancia como suma de términos
+no negativos~\cite{galbraith}:
+\[
+ \|v-t\|^2=\sum_{i=0}^{n-1}N_i
+ \left(x_i+\sum_{j>i}\mu_{ji}x_j-c_i\right)^2,
+ \qquad N_i=\|b_i^*\|^2,\quad c_i=\frac{\langle t,b_i^*\rangle}{N_i}.
+\]
+Elegimos los coeficientes desde $n-1$ hasta~0. Fijados los posteriores, el centro del
+coeficiente actual es $z_i=c_i-\sum_{j>i}\mu_{ji}x_j$. Si $D$ es la distancia parcial,
+solo pueden mejorar el resultado los enteros del intervalo
+\[
+ |x_i-z_i|\leq\sqrt{(R^2-D)/N_i}.
+\]
+El recorrido sigue el orden de Schnorr--Euchner: prueba primero los enteros más próximos
+al centro. Si una contribución parcial alcanza la mejor distancia conocida, ninguna
+continuación puede mejorarla y se descarta la rama. Cada mejora reduce $R^2$.
+En SVP se rechaza el vector cero; en empates se conserva cualquier óptimo.
+
+\begin{enumerate}
+\item Obtener el candidato inicial y su distancia; preparar Gram-Schmidt.
+\item Calcular el intervalo del siguiente coeficiente y recorrerlo desde el centro.
+\item Descartar si la distancia parcial no mejora $R^2$; en otro caso, descender.
+\item Al completar los coeficientes, guardar la mejora válida y actualizar $R^2$.
+\item Terminar cuando se hayan agotado todas las ramas que podían mejorar la cota.
+\end{enumerate}
+
+La cota parte de un punto válido y los descartes solo eliminan mejoras imposibles.
+Por tanto, al finalizar no queda un punto mejor sin explorar: esta es la garantía de
+optimalidad, no el mero hecho de que las pruebas pasen. Las cotas usan fracciones exactas:
+para $z_i=p/q$, se acota el entero $qx_i-p$ con raíz cuadrada entera, evitando perder
+soluciones por aproximaciones numéricas. El coste sigue siendo exponencial en el peor caso.
+
+\subsection{Elección frente a alternativas}
+LLL y Babai solos no certifican el óptimo; la traza CVP siguiente muestra un fallo real
+de Babai. Una fuerza bruta con cotas justificadas también sería exacta, pero enumerar
+por distancias permite descartar ramas completas. Lagrange--Gauss es una alternativa
+exacta para SVP en 2D; usamos una ruta común que también cubre dimensiones superiores.
+No incorporamos BKZ: la combinación elegida ya termina con coste reducido en estas
+instancias. Esto no establece superioridad general sobre otros métodos.

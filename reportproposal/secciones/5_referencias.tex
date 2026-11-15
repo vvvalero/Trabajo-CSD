@@ -1,0 +1,38 @@
+\renewcommand{\refname}{Referencias y recursos utilizados}
+\begin{thebibliography}{6}
+\setlength{\itemsep}{3pt}
+\bibitem{tema11} MUCC--UPV. \emph{Enunciado del trabajo y Tema 11: Criptografía postcuántica}.
+Criptología y Seguridad de los Datos, 2026. Material de la asignatura.
+\bibitem{ggh} O.~Goldreich, S.~Goldwasser y S.~Halevi. Public-key cryptosystems from
+lattice reduction problems. \emph{CRYPTO '97}, LNCS~1294, pp.~112--131, 1997.
+\bibitem{galbraith} S.~D.~Galbraith. \emph{Mathematics of Public Key Cryptography}.
+Cambridge University Press, 2012. Capítulos~17 y~18, versión ampliada y corregida:
+\url{https://www.math.auckland.ac.nz/~sgal018/crypto-book/crypto-book.html}.
+\bibitem{ia} OpenAI. \emph{Codex}, asistencia de IA para programación, revisión y redacción,
+2026. Prompts y tratamiento de las respuestas documentados a continuación.
+\bibitem{python} Python Software Foundation. \emph{Python 3: biblioteca estándar},
+\texttt{fractions}, \texttt{math}, \texttt{time} y \texttt{statistics}.
+\url{https://docs.python.org/3/library/}.
+\bibitem{latex} LaTeX Project. \emph{LaTeX}; J.~Collins y colaboradores, \emph{latexmk};
+C.~Feuersänger, \emph{PGFPlots}. Herramientas de composición de la memoria y su figura.
+\end{thebibliography}
+
+\noindent\textbf{Prompts y uso de IA.} Sobre el código previo de Gram-Schmidt, LLL y
+Babai, se solicitó completar GGH y redactar y revisar esta propuesta. Instrucciones
+relevantes, transcritas literalmente:
+\begin{enumerate}
+\item Implementación: \emph{«vale pues guiame hacia resolver lo que queda de ggh»};
+\emph{«vale, de cara a la defensa del trabajo tenemos que defender el uso de x algoritmo
+frente a otras opciones y tal quiero que sea defendible.»}; \emph{«pues implementalo supongo?»}.
+\item Revisión del código: \emph{«revisa los cambios porfa bien por si acaso»}.
+\item Redacción: \emph{«vale, vamos a revisar el report (memoria)»};
+\emph{«como estamos en una rama quizás podemos crear un reportproposal (directorio)
+basado en report con una versión ya más o menos \textquotedbl{}final\textquotedbl{} pudiendo consultar el report
+original si se quisiese aunque sé q tenemos git y podríamos volver atrás»}.
+\item Revisión de la memoria: \emph{«ves bien así la memoria propuesta entonces? cumple
+con las normas del enunciado?»}; \emph{«haz lo q consideres»}.
+\end{enumerate}
+Las respuestas se usaron como propuestas de código, pruebas y redacción. Su comprobación
+incluyó 222 tests, contrastes independientes en casos pequeños y ejecución de las 19 tareas.
+Los resultados y tiempos proceden del programa. Python y las herramientas de composición
+se citan en~\cite{python,latex}.

@@ -1,0 +1,48 @@
+% Adaptacion del estilo de report/: Times, monocromo y secciones compactas.
+% Texto, tablas, leyendas y bibliografia conservan el tamano normal de 12 pt.
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath}
+\usepackage{newtxtext,newtxmath}
+\usepackage[scaled=1]{zi4}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\pagestyle{plain}
+\usepackage{booktabs,tabularx,array}
+\usepackage{float}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\usepackage{tikz}
+\usetikzlibrary{babel,arrows.meta,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[font=normalsize,labelfont=bf,labelsep=period]{caption}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Resolucion exacta de SVP y CVP en instancias de GGH},
+ pdfauthor={Oscar Garcia Garcia y Valentin Valero Jimenez},
+ pdfsubject={Propuesta de memoria CSD: LLL, Babai y enumeracion exacta}}
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{9pt plus 1pt minus 1pt}{4pt}
+\titlespacing*{\subsection}{0pt}{7pt plus 1pt minus 1pt}{3pt}
+\titleformat{\paragraph}[runin]{\normalfont\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\paragraph}{0pt}{5pt}{0.5em}
+\setlength{\abovedisplayskip}{7pt plus 1pt minus 1pt}
+\setlength{\belowdisplayskip}{7pt plus 1pt minus 1pt}
+\setlength{\abovedisplayshortskip}{4pt}
+\setlength{\belowdisplayshortskip}{4pt}
+\setlength{\textfloatsep}{9pt}
+\setlength{\intextsep}{8pt}
+\newcommand{\cabecera}[3]{%
+ \begin{center}
+ {\Large\bfseries #1\par}\vspace{5pt}
+ {\normalsize #2\par}\vspace{3pt}
+ {\normalsize\itshape #3\par}
+ \end{center}}
+\AtEndDocument{%
+ \ifnum\value{page}>5
+ \PackageError{memoria}{La propuesta supera cinco paginas}{Reducir contenido, no el tamano de fuente.}%
+ \fi}
