@@ -123,3 +123,32 @@ con n = 3: en cada una solo hay un s con los errores tan pequeños, y es el que 
 lejos del umbral q/4:
 - bit 0: d = 0, −1 o −3 (cerca de 0);
 - bit 1: d = 114 con q = 229 y d = −183 con q = 379 (cerca de ±q/2).
+
+**Ring-LWE se rompe sin celosías (observación propia sobre los datos).** El ataque de resolver un sistema
+real y redondear no está en ningún libro: funciona por cómo están generadas estas tareas. En un Ring-LWE
+de verdad, `a` tiene coeficientes aleatorios entre 0 y q − 1, y a·s "da la vuelta" módulo q muchas veces.
+Aquí `a` va de 0 a 15 y `s` y `e` son pequeños, así que a·s nunca llega a q/2: `b` centrado es
+**exactamente** a·s + e con enteros normales, y b = a·s + e es un sistema lineal normal (la matriz es la de
+"multiplicar por `a`"). Se resuelve con fracciones exactas como si no hubiera error y se redondea.
+Comprobado en las 3 tareas:
+
+| Tarea | n | q | max \|a·s\| | q/2 | `s` | `e = b − a·s` | Desvío máximo antes de redondear | Tiempo |
+|---|---|---|---|---|---|---|---|---|
+| Tier3_T01 | 16 | 1399 | 97 | 699 | 0 … 2 | −1 … 1 | 0,07 | 0,01 s |
+| Tier3_T02 | 32 | 3119 | 293 | 1559 | 0 … 2 | −1 … 1 | 0,12 | 0,09 s |
+| Tier3_T03 | 64 | 5903 | 271 | 2951 | −2 … 2 | −1 … 1 | 0,20 | 0,8 s |
+
+El redondeo solo fallaría con un desvío de 0,5 o más; el peor es 0,20. Con el ejemplo del Tema 11
+(q = 463, n = 8) el mismo método recupera el secreto conocido (2, 2, 1, 2, 1, 2, 1, 2).
+
+**Ring-LWE: el descifrado no queda en duda.** Con el `s` recuperado, d = c₂ − s·c₁ = e·r + e₂ − s·e₁ + m·q/2.
+Los coeficientes de d (centrados) quedan muy cerca de su polo, lejísimos del umbral q/4:
+
+| Tarea | q/4 | Bit 0: \|d\| máximo | Bit 1: distancia máxima a q/2 | Palabra |
+|---|---|---|---|---|
+| Tier3_T01 | 349,75 | 8 | 7 | 0100111001010000 |
+| Tier3_T02 | 779,75 | 18 | 16 | 10100011110000010010000000101100 |
+| Tier3_T03 | 1475,75 | 33 | 26 | 0011111100001011111011010001010000010001001001100101000100100111 |
+
+El ejemplo del Tema 11 no trae un criptograma válido (errata), así que para probar el descifrado ciframos
+nosotros un mensaje con su clave pública y comprobamos que se recupera.

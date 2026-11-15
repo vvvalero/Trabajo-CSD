@@ -43,8 +43,8 @@ src/pqc/
     fuerza_bruta.py  celosia_modular.py                                                        TODO
     juguete.py             GGH de juguete (generar claves, cifrar, descifrar)                  HECHO
   lwe/                     LWE y Ring-LWE
-    resolver.py  fuerza_bruta.py  descifrado.py                                                HECHO
-    ataque_celosia.py  ring.py                                                                 TODO
+    resolver.py  fuerza_bruta.py  descifrado.py  ring.py                                       HECHO
+    ataque_celosia.py                                                                          TODO
 scripts/bench.py           tiempo frente a talla                                                TODO
 tests/                     tests (pytest)
 report/memoria.tex         memoria en LaTeX (máx. 5 páginas; pesos 15/30/40/15)
