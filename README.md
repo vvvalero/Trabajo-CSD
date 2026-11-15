@@ -43,6 +43,9 @@ src/pqc/
     resolver.py  reduccion_babai.py                                                            HECHO
     fuerza_bruta.py  celosia_modular.py                                                        TODO
     juguete.py             GGH de juguete (generar claves, cifrar, descifrar)                  HECHO
+  lwe/                     LWE y Ring-LWE
+    resolver.py  fuerza_bruta.py  descifrado.py  ring.py                                       HECHO
+    ataque_celosia.py                                                                          TODO
   lwe/                     LWE y Ring-LWE                                                       TODO
     resolver.py  fuerza_bruta.py  ataque_celosia.py  descifrado.py  ring.py
 scripts/resultados_ggh.py  regenerar resultados y tiempos de los 19 GGH sin módulo               HECHO
