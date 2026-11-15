@@ -15,6 +15,11 @@ base está sesgada, son difíciles*. Toda la estrategia sale de ahí:
 La **fuerza bruta** y **Lagrange-Gauss** cubren los casos pequeños y sirven de contraste para la gráfica de
 tiempo frente a talla que pide el enunciado.
 
+Estos apartados describen la estrategia y sus alternativas, no solo código terminado.
+La enumeración exacta ya está implementada y conectada al resolutor GGH; los métodos
+alternativos pendientes no son necesarios para usar esa ruta. Para distinguir las
+garantías, los resultados comprobados y las mediciones que faltan, ver `defensa_ggh.md`.
+
 Origen de cada pieza:
 
 - **Redondeo de Babai:** aparece en el propio enunciado (Ejemplo 3, "el llamado Babai round").
@@ -35,17 +40,17 @@ Origen de cada pieza:
     ‖b*_i‖² ≥ (δ − μ²_{i,i-1}) ‖b*_{i-1}‖², con ¼ < δ < 1 (habitualmente 0,75 o 0,99).
   - Garantía: ‖b_1‖ ≤ 2^((n−1)/2) · λ_1 (con δ = 3/4), es decir, el primer vector está a un factor
     acotado del más corto.
-- **Por qué en nuestro caso:** es "la forma de transformar la base pública" que el enunciado deja como
-  ejercicio. En dimensiones pequeñas LLL prácticamente **recupera la base privada**: los vectores cortos
-  encontrados, como (0, 1, 15, 2) o (−15, 1), son filas de la base privada casi diagonal.
+- **Por qué en nuestro caso:** permite transformar la base pública en otra base reducida de la misma
+  celosía. No garantiza recuperar la base privada original. Los vectores cortos encontrados son útiles
+  para la búsqueda aunque no conozcamos cómo se generó la clave privada.
 
 ### 2.2 Babai: redondeo (Babai, 1986)
 
 - **Qué hace:** escribe el objetivo en coordenadas de la base (t·B⁻¹), redondea cada coordenada y vuelve a
   multiplicar por B.
-- **Por qué funciona:** si t = x·B + e, entonces t·B⁻¹ = x + e·B⁻¹. El redondeo devuelve x **si y solo si
-  todas las componentes de e·B⁻¹ están en (−½, ½)**. Es exactamente el argumento del Ejemplo 3 del
-  enunciado.
+- **Por qué funciona:** si t = x·B + e, entonces t·B⁻¹ = x + e·B⁻¹. Una condición suficiente para
+  recuperar x es que todas las componentes de e·B⁻¹ estén en (−½, ½). En los extremos el resultado
+  depende del convenio de desempate. Es el argumento del Ejemplo 3 del enunciado.
 - **Cuándo falla:** con una base mala, B⁻¹ amplifica el error y el redondeo cae en otro punto. Es el caso
   e = (−2, 2) del enunciado.
 - **Por qué en nuestro caso:** es el descifrado legítimo de GGH. Aplicado tras LLL a la base pública es
@@ -69,8 +74,8 @@ Origen de cada pieza:
        | t  M |
   ```
 
-  Si t está cerca de un punto v de la celosía, el vector (t − v, M) es muy corto en la nueva celosía y LLL
-  lo encuentra.
+  Si t está cerca de un punto v de la celosía, el vector (t − v, M) puede ser corto en la nueva celosía.
+  LLL puede encontrarlo, pero no existe esa garantía en general: influyen M y los demás vectores cortos.
 - **Por qué en nuestro caso:** **la misma idea resuelve el CVP de GGH y el ataque primal a LWE**, porque en
   LWE b − A·s = e es un vector corto. Un solo concepto sirve para los dos criptosistemas.
 - **Limitación observada:** en Tier0T05_Latt, con M = 1, el vector reducido no tenía la última coordenada
@@ -82,16 +87,26 @@ Origen de cada pieza:
   de radio R (alrededor del origen para SVP y del objetivo para CVP). Gram-Schmidt da en cada nivel i un
   intervalo finito de valores posibles para el coeficiente x_i, según el radio que queda por gastar:
 
-  |x_i + Σ_{j>i} μ_ji x_j| ≤ sqrt(R² − parcial) / ‖b*_i‖
+  |x_i + Σ_{j>i} μ_ji x_j − c_i| ≤ sqrt(R² − parcial) / ‖b*_i‖,
+
+  con c_i = ⟨t, b*_i⟩ / ‖b*_i‖² en CVP y c_i = 0 en SVP.
 
   Schnorr–Euchner añade dos mejoras: probar los valores en zigzag desde el centro y **reducir R** cada vez
   que encuentra un vector mejor.
-- **Por qué funciona:** es exhaustiva dentro de la bola, así que **demuestra** que el resultado es el
-  óptimo. Su coste es exponencial en el peor caso, pero con una base reducida con LLL y dimensión ≤ 15
-  tarda milisegundos.
+- **Por qué funciona:** con un candidato inicial válido, es exhaustiva dentro de la bola y **demuestra**
+  el óptimo al completar el recorrido (excluyendo el cero en SVP). Su coste es exponencial en el peor
+  caso. `results/ggh_exactos.csv` (generado con `python3 scripts/resultados_ggh.py`)
+  registra una ejecución de las 19 tareas GGH sin módulo,
+  con tiempo de LLL y enumeración por separado. La dimensión ≤ 15 por sí sola no garantiza
+  una ejecución rápida en otras bases.
+- **Implementación:** `celosias/enumeracion.py`, con aritmética racional exacta incluso al calcular
+  los intervalos. Se visitan primero los enteros más cercanos al centro y se reduce el radio al
+  encontrar mejoras. Solo se buscan mejoras estrictas: un empate puede conservar el candidato
+  inicial. No se usan podas heurísticas ni límites arbitrarios de coeficientes.
 - **Por qué la necesitamos:**
   - LLL y Babai son aproximados.
-  - En Tier02T03_Latt el embedding dio distancia² = 187, un resultado sospechoso.
+  - En Tier02T03_Latt Babai por redondeo da distancia² = 187 y plano más cercano 186;
+    la enumeración completa encuentra el óptimo 155.
   - En Tier03T04_Latt (SVP de dimensión 15), probar todas las combinaciones con coeficientes en
     {−1, 0, 1} tardó 166 s y aun así no prueba que sea el más corto.
 
