@@ -21,9 +21,10 @@ def main(argv):
         shutil.rmtree(HERE / "build", ignore_errors=True)
         return 0
     if "--datos" in argv:
-        datos = subprocess.run([sys.executable, str(HERE / "generar_datos.py")])
-        if datos.returncode:
-            return datos.returncode
+        for script in ("generar_datos.py", "generar_datos_lwe.py"):   # GGH y luego LWE / Ring-LWE
+            datos = subprocess.run([sys.executable, str(HERE / script)])
+            if datos.returncode:
+                return datos.returncode
     r = subprocess.run(
         ["latexmk", "-pdf", "-interaction=nonstopmode", "-halt-on-error", "-outdir=build", "memoria.tex"],
         cwd=HERE,

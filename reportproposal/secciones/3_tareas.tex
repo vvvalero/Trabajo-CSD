@@ -1,36 +1,25 @@
 \section{Resolución de tareas}
-Se verificaron las 19 tareas GGH sin módulo: pertenencia a la celosía, exclusión del
-cero en SVP y coincidencia con las cinco referencias de tier~0, consultadas después
-del cálculo. La validación del 15/11/2026 pasó 222 pruebas; la revisión del 16/11/2026
-pasa las 250 de la batería actual, que también incluye LWE y Ring-LWE. Hay contrastes
-con fuerza bruta independiente en casos pequeños, objetivos racionales, empates,
-bases sesgadas y coordenadas grandes.
+Hemos resuelto todas las tareas salvo las tres GGH con reducción módulo $n$ (3.01, 3.02 y 3.05),
+porque no llegamos a una interpretación clara de qué problema plantean. En total, 12 de nivel~1 (7 GGH y 5
+LWE), 10 de nivel~2 (5 GGH y 5 LWE) y 10 de nivel~3 (2 GGH, 5 LWE y 3 Ring-LWE), además de las 10
+de Tier~0. Llamamos $k.j$ a la tarea~$j$ del tier~$k$ de GGH, y L$k.j$ y R$k.j$ a las de LWE y
+Ring-LWE. Todas las soluciones están comprobadas: en
+GGH, que el punto es de la celosía (y en SVP distinto de cero); en LWE, que el secreto deja un error
+pequeño en todas las ecuaciones; y en las diez de Tier~0, que el resultado coincide con el del
+fichero. Hay además 269 pruebas automáticas que comparan métodos entre sí.
 
-\subsection{Selección y resultados}
-Presentamos siete tareas con variedad de dimensiones y ambos problemas. Los pares de
-dimensión~7 y~15 comparten base. La etiqueta $k.j$ identifica la tarea~$j$ del tier~$k$;
-por ejemplo, 2.04 corresponde a \texttt{Tier02T04\_Latt}. Todas emplean LLL y enumeración.
-En SVP, $d^2=\|v\|^2$; en CVP, $d^2=\|v-t\|^2$. La cota inicial $R_0^2$ procede
-de la fila más corta de la base reducida (SVP) o de Babai (CVP).
+\subsection{GGH}
+La Tabla~\ref{tab:ggh} recoge las 14 tareas. En todas el punto de partida (Babai, o el vector más
+corto tras LLL) ya era el óptimo salvo en 2.03, donde la enumeración lo mejora, y la enumeración
+visita como mucho $n+2$ nodos en dimensión $n$. Las bases públicas
+tienen un cociente de Hadamard entre 0{,}007 y 0{,}24, salvo 1.01 y 1.03, que ya eran casi
+perpendiculares (0{,}91 y 0{,}99); tras LLL todas superan 0{,}95.
 
-\begin{table}[H]
+\begin{table}[htb]
 \centering
-\input{datos/tabla_seleccion}
-\caption{Resultados exactos. Medianas de \Repeticiones{} repeticiones.
-Nodos: estados visitados, incluidas las hojas; se excluyen el candidato inicial
-y las ramas descartadas.}
+\input{datos/tabla_ggh}
+\caption{GGH con LLL y enumeración. $d^2$: distancia$^2$ óptima ($\|v\|^2$ en SVP, $\|v-t\|^2$ en
+CVP); ms: tiempo de LLL más enumeración, mediana de \Repeticiones{} repeticiones. La dimensión es
+el número de coordenadas del punto. En SVP también vale el opuesto del punto.}
+\label{tab:ggh}
 \end{table}
-
-Los puntos obtenidos, expresados en coordenadas del espacio y no como multiplicadores,
-son los siguientes (el signo opuesto también es solución en SVP):
-\input{datos/soluciones}
-
-La selección aporta $0{,}3+\min(4\cdot0{,}5,1{,}8)+2=4{,}1$ puntos, limitados a
-\textbf{4/4} por el enunciado~\cite{tema11}. No se cuenta bono por combinar GGH y LWE.
-
-\subsection{Reproducción}
-\texttt{python3 reportproposal/generar\_datos.py} reproduce resultados, estadística y
-mediciones. Las medidas del 15/11/2026 usan un calentamiento y \Repeticiones{} repeticiones con
-\texttt{perf\_counter}, en macOS arm64 y Python~3.9.6. Se cronometran LLL y enumeración
-por separado; el total incluye ambos. La validación queda fuera del tiempo medido.
-Los CSV, las trazas y los hashes del código se conservan en \texttt{reportproposal/datos/}.

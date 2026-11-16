@@ -4,6 +4,7 @@ import pytest
 
 from pqc.lector_tareas import TareaLWE, leer_todas
 from pqc.lwe import descifrar_bit, romper_clave
+from pqc.lwe.ataque_celosia import ataque, sistema_a_celosia
 from pqc.lwe.fuerza_bruta import fuerza_bruta
 from pqc.matrices import centrado_vector, matriz_por_vector, resta_vectores
 
@@ -53,3 +54,37 @@ def test_descifrado_ejemplo6(C, B, bit):
     tarea = TareaLWE(nombre="Ejemplo6", problema="criptoanalisis", n=4, q=71, A=[], b=[],
                      criptograma=(C, B), solucion=None)
     assert descifrar_bit(tarea, [4, 70, 0, 3]) == bit
+
+
+# ------------------------------------------------------------------ ataque de celosia (CVP)
+
+DIFICILES = [t for t in LWE if t.nombre in (
+    "Tier2T04_LWE", "Tier2T05_LWE", "Tier3T01_LWE", "Tier3T02_LWE", "Tier3T03_LWE",
+    "Tier3T04_LWE", "Tier3T05_LWE")]
+
+
+def test_ejemplo4_con_celosia_tambien_da_un_secreto_falso():
+    # Con una sola ecuacion de sobra, el punto mas cercano a b no es el del secreto real:
+    # (6, 19, 60, 37) deja un error (-1, 0, 1, -1, 0), mas pequeno que el real (-3, 3, -2, 0, 2).
+    # Ningun metodo puede distinguirlos: hacen falta ecuaciones de sobra.
+    assert ataque(EJEMPLO4) == [6, 19, 60, 37]
+
+
+def test_base_de_la_celosia_ejemplo_del_docstring():
+    tarea = TareaLWE(nombre="mini", problema="rotura", n=1, q=7, A=[[2], [3]], b=[2, 3],
+                     criptograma=None, solucion=None)
+    base, objetivo, _ = sistema_a_celosia(tarea)
+    assert base == [[1, 5], [0, 7]] and objetivo == [2, 3]
+
+
+@pytest.mark.parametrize("tarea", TIER0 + TIER1, ids=lambda t: t.nombre)
+def test_celosia_coincide_con_fuerza_bruta(tarea):
+    # Dos metodos distintos deben dar el mismo secreto.
+    assert ataque(tarea) == romper_clave(tarea)
+
+
+@pytest.mark.parametrize("tarea", DIFICILES, ids=lambda t: t.nombre)
+def test_celosia_tareas_dificiles_errores_pequenos(tarea):
+    s = ataque(tarea)
+    errores = centrado_vector(resta_vectores(tarea.b, matriz_por_vector(tarea.A, s)), tarea.q)
+    assert max(abs(x) for x in errores) <= 15

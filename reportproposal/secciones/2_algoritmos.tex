@@ -1,53 +1,103 @@
-\subsection{Candidato inicial y cota de búsqueda}
-En CVP utilizamos Babai del plano más cercano: desde el último vector al primero,
-proyectamos el residuo sobre $b_i^*$, redondeamos y restamos el múltiplo correspondiente
-de $b_i$. Se obtiene un punto válido, aunque no necesariamente el más próximo.
-El redondeo simultáneo de $tB^{-1}$ es otra variante implementada para comparación.
-Los empates se redondean hacia arriba. En SVP elegimos como candidato el vector
-más corto entre las filas de la base reducida; puede haber combinaciones aún más cortas.
+\section{Algoritmos}
+\subsection{Reducción de base: Gram-Schmidt y LLL}
+\begin{wrapfigure}{r}{5.2cm}
+\vspace{-12pt}
+\centering
+\input{figuras/celosia}
+\caption{La celosía del Ejemplo~1 del enunciado con dos bases: los puntos son los mismos.}
+\label{fig:celosia}
+\vspace{-6pt}
+\end{wrapfigure}
+Una misma celosía tiene muchas bases. Con una buena, de vectores cortos y casi perpendiculares,
+SVP y CVP son fáciles; con una mala, de vectores largos y casi paralelos, no
+(Figura~\ref{fig:celosia}). GGH publica una base mala y guarda la buena, así que para atacarlo hay
+que convertir la base pública en una buena. Eso es lo que hace LLL~\cite{lll,galbraith}.
 
-Si el candidato es $v_0$, fijamos $R^2=\|v_0-t\|^2$, con $t=0$ en SVP. Cualquier
-solución mejor debe estar dentro de ese radio. Si un CVP ya tiene distancia cero,
-el candidato es óptimo y la búsqueda termina.
+LLL usa Gram-Schmidt para medir la base: los vectores perpendiculares $b_i^*$ (que no son de la
+celosía) y los coeficientes $\mu_{ij}$, que indican cuánto se parece cada vector a los anteriores.
+Con eso repite dos operaciones: restar a un vector un múltiplo entero de otro para que se parezcan
+menos ($|\mu_{ij}|\le\frac12$), e intercambiar dos vectores seguidos cuando la parte perpendicular
+del segundo, $b_k^*$, es bastante más corta que la del primero (condición de Lovász, con
+$\delta=0{,}99$). Las dos son cambios de base unimodulares, como la $U$ de GGH, así que la celosía
+no cambia, solo su descripción. LLL termina en tiempo polinómico y garantiza que el primer vector
+es como mucho $(\delta-\frac14)^{-(n-1)/2}\approx1{,}16^{\,n-1}$ veces el más corto. Para medir la
+calidad de una base usamos el cociente de Hadamard~\cite{galbraith}, $H=(\det L/\prod_i\|b_i\|)^{1/n}$,
+que va de 0 a 1 y vale 1 si la base es perpendicular: en la tarea 3.03 pasa de 0{,}24 a 0{,}96.
 
-\subsection{Enumeración exacta y justificación del óptimo}
-Para $v=\sum_i x_i b_i$, Gram-Schmidt expresa la distancia como suma de términos
-no negativos~\cite{galbraith}:
+\subsection{CVP aproximado: Babai, o por qué LLL rompe GGH}
+El redondeo de Babai~\cite{babai} es justo el descifrado de GGH del enunciado: si $c=xB+e$,
+entonces $cB^{-1}=x+eB^{-1}$, y al redondear sale $x$ si cada componente de $eB^{-1}$ está entre
+$-\frac12$ y $\frac12$. Con la base pública $B^{-1}$ tiene números grandes y el redondeo falla; con
+una base reducida $eB^{-1}$ es pequeño y acierta. Por eso no hace falta la clave privada: basta con
+reducir la base pública y aplicar Babai. Usamos la variante del ``plano más cercano'', que redondea
+vector a vector empezando por el último y acierta en más casos. Aun así, ninguna variante asegura
+el punto más cercano (la traza 2.03 muestra un fallo), así que la usamos como punto de partida.
+
+\subsection{Enumeración exacta (SVP y CVP)}
+Para asegurar el óptimo hacemos una búsqueda exhaustiva, pero ordenada. Si $v=\sum_i x_ib_i$,
+Gram-Schmidt permite escribir la distancia al objetivo como una suma de términos que nunca son
+negativos~\cite{galbraith}:
 \[
- \|v-t\|^2=\sum_{i=0}^{n-1}N_i
- \left(x_i+\sum_{j>i}\mu_{ji}x_j-c_i\right)^2,
- \qquad N_i=\|b_i^*\|^2,\quad c_i=\frac{\langle t,b_i^*\rangle}{N_i}.
+ \|v-t\|^2=\sum_{i=0}^{n-1}\|b_i^*\|^2\,(x_i-z_i)^2 ,
 \]
-Elegimos los coeficientes desde $n-1$ hasta~0. Fijados los posteriores, el centro del
-coeficiente actual es $z_i=c_i-\sum_{j>i}\mu_{ji}x_j$. Si $D$ es la distancia parcial,
-solo pueden mejorar el resultado los enteros del intervalo
-\[
- |x_i-z_i|\leq\sqrt{(R^2-D)/N_i}.
-\]
-El recorrido sigue el orden de Schnorr--Euchner: prueba primero los enteros más próximos
-al centro. Como los términos restantes son no negativos, si la suma parcial ya alcanza
-la mejor distancia conocida, ninguna continuación puede mejorarla y se descarta la rama.
-Cada mejora reduce $R^2$.
-En SVP se rechaza el vector cero; en empates se conserva cualquier óptimo.
+donde el ``centro'' $z_i$ solo depende de $t$ y de los coeficientes $x_{i+1},\dots,x_{n-1}$. Por eso
+elegimos los coeficientes de atrás hacia delante, como en un árbol. Partimos del punto de Babai
+(en SVP, el vector más corto de la base reducida), cuya distancia $R^2$ sirve de límite. En cada
+nivel solo probamos los enteros cercanos al centro que aún pueden quedar por debajo de $R^2$,
+empezando por el más próximo (orden de Schnorr--Euchner~\cite{se}). Como lo que falta por sumar
+no puede restar, en cuanto la suma parcial llega a $R^2$ abandonamos esa rama. Cada mejora baja
+$R^2$, y cuando no quedan ramas sabemos que no existe un punto mejor. En SVP se descarta el cero;
+las cuentas son con fracciones para no perder soluciones por redondeo. El coste es exponencial en
+el peor caso, pero tras LLL el límite inicial es bueno y se visitan muy pocos nodos. Descartamos Lagrange--Gauss (solo vale en dimensión 2) y BKZ (un LLL más potente, innecesario
+aquí): así un único método sirve para todas las tareas.
 
-\begin{enumerate}
-\item Obtener el candidato inicial y su distancia; preparar Gram-Schmidt.
-\item Calcular el intervalo del siguiente coeficiente y recorrerlo desde el centro.
-\item Descartar si la distancia parcial no mejora $R^2$; en otro caso, descender.
-\item Al completar los coeficientes, guardar la mejora válida y actualizar $R^2$.
-\item Terminar cuando se hayan agotado todas las ramas que podían mejorar la cota.
-\end{enumerate}
+\subsection{LWE: fuerza bruta sobre el error y descifrado de un bit}
+Si supiéramos el error de $n$ ecuaciones, despejaríamos $s$ como en un sistema normal (con la
+inversa módulo $q$). Como los errores son pequeños, probamos todas las posibilidades en $[-c,c]$
+para esas $n$ ecuaciones, despejamos $s$ y comprobamos si deja un error pequeño en \emph{todas}.
+Empezamos con $c=0$ y vamos subiendo. Para cada $c$ hay $(2c+1)^n$ casos, que crecen muy rápido
+con $n$; el mayor que usamos es L2.03, con $13^5\approx371\,000$, y paramos si se pasaría de un
+millón. Las ecuaciones sobrantes son las que dan confianza: un secreto falso tendría que encajar en
+todas por casualidad, y en la tarea L1.02 la probabilidad es de alrededor de $10^{-12}$. En cambio,
+el Ejemplo~4 del enunciado solo tiene una ecuación de sobra, y con $c=1$ ya aparecen dos secretos
+falsos, $(60,4,10,40)$ y $(6,19,60,37)$, antes que el verdadero.
 
-La cota parte de un punto válido y los descartes solo eliminan mejoras imposibles.
-Por tanto, al finalizar no queda un punto mejor sin explorar: esta es la garantía de
-optimalidad. Los límites y las comparaciones usan fracciones exactas y raíces cuadradas
-enteras, evitando perder soluciones por errores numéricos.
-El coste sigue siendo exponencial en el peor caso.
+Para descifrar un bit seguimos el enunciado: calculamos $R=C\cdot s \bmod q$ y miramos $d=B-R$
+entre $-q/2$ y $q/2$. Con bit 0, $d$ es la suma de errores y queda cerca de 0; con bit 1 se le ha
+sumado $\lfloor q/2\rfloor$ y queda cerca de $\pm q/2$. Decidimos con el umbral $|d|<q/4$.
 
-\subsection{Elección frente a alternativas}
-LLL y Babai solos no certifican el óptimo; la traza CVP siguiente muestra un fallo real
-de Babai. Una fuerza bruta con cotas justificadas también sería exacta, pero enumerar
-por distancias permite descartar ramas completas. Lagrange--Gauss es una alternativa
-exacta para SVP en 2D; usamos una ruta común que también cubre dimensiones superiores.
-No incorporamos BKZ: la combinación elegida ya termina con coste reducido en estas
-instancias. Esto no establece superioridad general sobre otros métodos.
+\subsection{LWE como CVP: las mismas herramientas que en GGH}
+\label{sec:lwecvp}
+Para las LWE más grandes cambiamos de enfoque. Los vectores $As \bmod q$, para todos los $s$,
+forman una celosía de $\mathbb Z^m$ (sumar dos de ellos, o sumar $q$ a una coordenada, da otro del
+mismo tipo). Como $b=As+e$ con $e$ pequeño, $b$ está muy cerca del punto $As$: recuperar $s$ es un
+CVP con objetivo $b$, igual que al descifrar GGH. Construimos una base de esa celosía con $A$ y
+$q$, la reducimos con LLL, buscamos con la enumeración el punto más cercano a $b$ y de él
+despejamos $s$. El coste ya no depende de $(2c+1)^n$ sino del tamaño de la celosía ($m\le30$ aquí). Comprobamos el resultado de tres formas: el error $b-As$ sale pequeño
+(como mucho $\pm15$); L2.03, resuelta con los dos métodos, da el mismo secreto; y en todas menos
+L3.02 el error mide menos de la mitad del vector más corto de la celosía, así que ningún otro punto
+está igual de cerca. En L3.02 el margen no llega ($\|e\|^2=1073$ frente a $\lambda_1^2/4\approx1018$):
+el punto es el más cercano, pero no podemos descartar del todo otro secreto con un error parecido.
+Con pocas ecuaciones no funciona: en el Ejemplo~4 sale el secreto falso $(6,19,60,37)$.
+
+\subsection{Ring-LWE: un sistema lineal por los parámetros de las tareas}
+\label{sec:ring}
+En Ring-LWE la clave pública es $b=a\cdot s+e$, con polinomios módulo $x^n+1$, coeficientes
+módulo $q$ y $s$, $e$ pequeños~\cite{tema11}. Multiplicar por $a$ equivale a multiplicar por una
+matriz $n\times n$ formada con sus coeficientes: es un LWE con estructura, cuya dificultad se apoya
+en celosías ideales. Con parámetros bien elegidos no se conoce forma práctica de romperlo, y por
+eso variantes suyas están en los estándares~\cite{lpr,fips203}.
+
+Lo que hace vulnerables estas tareas son sus parámetros. Al mirar los datos vimos que $a$ solo
+tiene coeficientes entre 0 y 15, cuando en un Ring-LWE normal ocupan todo el rango hasta $q-1$. El Tema~11 solo dice que $s$ y $e$ son
+pequeños; nuestra hipótesis fue que están entre $-2$ y 2. Entonces cada coeficiente de $a\cdot s+e$
+es una suma de $n$ productos de como mucho $15\cdot2$, y no pasa de $30n+2$: 482, 962 y 1922 para
+$n=16$, 32 y 64, siempre por debajo de $q/2$ (699, 1559 y 2951). El módulo $q$ no llega a actuar y
+$b$ es \emph{exactamente} $a\cdot s+e$ con enteros normales (que sin módulo el problema sea
+lineal es conocido; lo nuestro fue verlo en estos datos). Resolvemos el sistema sin el error y redondeamos; que el redondeo acierte no lo demostramos, lo
+comprobamos: ningún
+valor se aleja más de 0{,}20 de un entero, el error $b-a\cdot s$ sale en $\{-1,0,1\}$ y $s$ en
+$[-2,2]$, como suponíamos. Cuesta $O(n^3)$, frente a $5^{16}\approx10^{11}$ casos de una fuerza
+bruta ya con $n=16$. Con $s$ desciframos como en el Tema~11: cada coeficiente de
+$d=c_2-s\cdot c_1$ queda cerca de 0 (bit 0) o de $\pm q/2$ (bit 1). Con $a$ normal el módulo actúa
+muchas veces y este atajo no sirve.

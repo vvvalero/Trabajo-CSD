@@ -2,13 +2,14 @@
 %   (a) Base publica (mala):   (5, 19), (3, 14)
 %   (b) Base reducida (buena): (3, 1), (-1, 4)   (LLL la devuelve con el signo cambiado)
 % Las dos generan la MISMA celosia: los puntos son iguales en los dos dibujos.
-% Lo unico que cambia es el paralelogramo fundamental (sombreado): largo y estrecho
+% Lo unico que cambia es el paralelogramo de la base (sombreado): largo y estrecho
 % con la base mala, casi un cuadrado con la buena.
-\begin{tikzpicture}[x=0.17cm,y=0.17cm,font=\normalsize,
-                    vec/.style={-{Stealth[length=3.5pt]},line width=0.8pt}]
+\begin{tikzpicture}[x=0.14cm,y=0.14cm,
+                    vec/.style={-{Stealth[length=4pt]},line width=0.9pt},
+                    etiqueta/.style={fill=white,inner sep=0.8pt,font=\small}]
   \newcommand{\puntos}{%
     \foreach \a in {-8,...,10}{\foreach \b in {-3,...,6}{
-      \fill ({3*\a-\b},{\a+4*\b}) circle (0.38);}}}
+      \fill[gray!70!black] ({3*\a-\b},{\a+4*\b}) circle (0.32);}}}
 
   % (a) Base publica
   \begin{scope}
@@ -19,9 +20,9 @@
     \draw[vec] (0,0) -- (3,14);
   \end{scope}
   \draw[line width=0.4pt] (-3,-2) rectangle (12,22);
-  \node[anchor=west] at (5.3,19.5) {$b_1$};
-  \node[anchor=east] at (2.7,14.5) {$b_2$};
-  \node[below] at (4.5,-2) {(a) Base pública};
+  \node[etiqueta,anchor=west] at (5.6,19) {$b_1$};
+  \node[etiqueta,anchor=east] at (2.4,14) {$b_2$};
+  \node[below,font=\small] at (4.5,-2) {(a) pública};
 
   % (b) Base reducida
   \begin{scope}[shift={(19,0)}]
@@ -33,8 +34,8 @@
       \draw[vec] (0,0) -- (-1,4);
     \end{scope}
     \draw[line width=0.4pt] (-3,-2) rectangle (12,22);
-    \node[anchor=west] at (3.2,1) {$b_1'$};
-    \node[anchor=east] at (-1.1,4.3) {$b_2'$};
-    \node[below] at (4.5,-2) {(b) Base reducida};
+    \node[etiqueta,anchor=west] at (3.5,0.5) {$b_1'$};
+    \node[etiqueta,anchor=south] at (-1,4.6) {$b_2'$};
+    \node[below,font=\small] at (4.5,-2) {(b) reducida};
   \end{scope}
 \end{tikzpicture}

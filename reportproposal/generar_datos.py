@@ -1,6 +1,6 @@
-"""Regenerar las mediciones, soluciones y trazas de la propuesta de memoria.
+"""Datos GGH de la memoria: tabla de resultados, trazas y tiempos.
 
-  python3 reportproposal/generar_datos.py --repeticiones 21
+  python reportproposal/generar_datos.py --repeticiones 21
 
 No modifica report/ ni el codigo de los algoritmos. Cada tiempo publicado es
 la mediana de repeticiones con perf_counter, tras una ejecucion de calentamiento.
@@ -16,6 +16,7 @@ import statistics
 import subprocess
 import sys
 from dataclasses import asdict
+from datetime import date
 from pathlib import Path
 from time import perf_counter
 
@@ -27,10 +28,6 @@ from pqc.celosias import babai_plano_cercano, babai_redondeo, gso, lll  # noqa: 
 from pqc.celosias.enumeracion import EstadisticasEnumeracion, enumeracion  # noqa: E402
 from pqc.lector_tareas import leer_todas  # noqa: E402
 from pqc.matrices import es_entera, inversa, norma2, resta_vectores, vector_por_matriz  # noqa: E402
-
-SELECCION = ["Tier01T05_Latt", "Tier02T01_Latt", "Tier02T02_Latt", "Tier02T04_Latt",
-             "Tier02T05_Latt", "Tier03T03_Latt", "Tier03T04_Latt"]
-
 
 def escribir_csv(ruta, filas):
     with ruta.open("w", newline="", encoding="utf-8") as f:
@@ -44,10 +41,6 @@ def etiqueta(nombre):
     return f"{int(tier)}.{int(numero.split('_')[0]):02d}"
 
 
-def vector_tex(p):
-    return "(" + ",".join(str(int(v)) for v in p) + ")"
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--repeticiones", type=int, default=21)
@@ -58,11 +51,11 @@ def main():
     carpeta.mkdir(exist_ok=True)
     todas = leer_todas(ROOT / "data")["ggh"]
     tareas = {t.nombre: t for t in todas if not t.modulo}
-    resultados, curvas, puntos, trazas = [], [], {}, {}
+    resultados, puntos, trazas = [], {}, {}
     for tarea in tareas.values():
         t = tarea.objetivo if tarea.objetivo is not None else [0] * tarea.dim
         enumeracion(lll(tarea.base), tarea.objetivo)   # calentamiento, fuera de las medidas
-        medidas_lll, medidas_enum, medidas_total, medidas_babai = [], [], [], []
+        medidas_lll, medidas_enum, medidas_total = [], [], []
         for _ in range(args.repeticiones):
             ini = perf_counter()
             R = lll(tarea.base)
@@ -73,11 +66,6 @@ def main():
             medidas_lll.append(1000 * (medio - ini))
             medidas_enum.append(1000 * (fin - medio))
             medidas_total.append(1000 * (fin - ini))
-            if tarea.objetivo is not None:
-                ini_babai = perf_counter()
-                aproximado = babai_plano_cercano(R, t)
-                fin_babai = perf_counter()
-                medidas_babai.append(1000 * ((medio - ini) + fin_babai - ini_babai))
 
         distancia = norma2(resta_vectores(punto, t))
         if not es_entera(vector_por_matriz(punto, inversa(tarea.base))):
@@ -95,16 +83,15 @@ def main():
                 "ms_total": statistics.median(medidas_total), "punto": json.dumps(punto)}
         resultados.append(fila)
         puntos[tarea.nombre] = punto
-        if tarea.objetivo is not None:
-            curvas.append({"tarea": tarea.nombre, "dimension": tarea.dim,
-                           "ms_babai": statistics.median(medidas_babai), "ms_exacto": fila["ms_total"]})
-        if tarea.nombre in ("Tier01T05_Latt", "Tier02T03_Latt"):
+        # Datos de las trazas de la memoria (2.03 y 3.03), con fracciones exactas.
+        if tarea.nombre in ("Tier02T03_Latt", "Tier03T03_Latt"):
             mu, normas, _ = gso(R)
             traza = {"base_original": tarea.base, "base_reducida": R, "objetivo": tarea.objetivo,
                      "mu": [[str(v) for v in row] for row in mu], "normas2_gso": [str(v) for v in normas],
                      "optimo": punto, "coef_optimos": [int(v) for v in vector_por_matriz(punto, inversa(R))],
                      "estadisticas": {k: str(v) for k, v in asdict(datos).items()}}
             if tarea.objetivo is not None:
+                aproximado = babai_plano_cercano(R, t)
                 traza.update({"babai": aproximado,
                               "coef_babai": [int(v) for v in vector_por_matriz(aproximado, inversa(R))],
                               "d2_babai": int(norma2(resta_vectores(aproximado, t))),
@@ -112,41 +99,51 @@ def main():
             trazas[tarea.nombre] = traza
 
     escribir_csv(carpeta / "resultados.csv", resultados)
-    escribir_csv(carpeta / "comparacion_cvp.csv", curvas)
-    (carpeta / "trazas.json").write_text(json.dumps(trazas, indent=2, ensure_ascii=False) + "\n")
+    (carpeta / "trazas.json").write_text(json.dumps(trazas, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     por_nombre = {f["tarea"]: f for f in resultados}
-    filas_tex, soluciones_tex = [], []
-    for nombre in SELECCION:
+    filas_tex = []
+    # Todas las tareas GGH puntuables (niveles 1 a 3, sin modulo), ordenadas por etiqueta: 1.01, 1.02...
+    # Una fila por tarea con el resultado y el punto obtenido, p. ej.
+    #   2.03 & CVP & 5 & 155 & 7 & 1{,}26 & $(807,997,549,1528,155)$ \\
+    # (la distancia del punto de partida, R0^2, coincide con d^2 salvo en 2.03, que se comenta en el texto)
+    puntuables = sorted((n for n in tareas if not n.startswith("Tier0T")), key=etiqueta)
+    for nombre in puntuables:
         f = por_nombre[nombre]
         tiempo = f"{f['ms_total']:.2f}".replace(".", "{,}")
-        filas_tex.append(f"{f['etiqueta']} & {f['tipo']} & {f['dimension']} & {f['radio2_inicial']} & {f['d2']} & {f['nodos']} & {tiempo} \\\\")
-        p = puntos[nombre]
-        indice = f"v_{{\\text{{{f['etiqueta']}}}}}"
-        if len(p) > 7:
-            soluciones_tex.append(f"{indice}={{}}&({','.join(map(str,p[:8]))},\\\\\n &\\phantom{{(}}{','.join(map(str,p[8:]))}) \\\\")
-        else:
-            soluciones_tex.append(f"{indice}={{}}&{vector_tex(p)} \\\\")
-    cabecera = ("\\begin{tabular}{@{}lcrrrrr@{}}\n\\toprule\n"
-                "Tarea & Tipo & $n$ & $R_0^2$ & $d^2$ óptima & Nodos & Tiempo (ms)\\\\\n\\midrule\n")
-    (carpeta / "tabla_seleccion.tex").write_text(cabecera + "\n".join(filas_tex) + "\n\\bottomrule\n\\end{tabular}\n")
-    (carpeta / "soluciones.tex").write_text("\\begin{align*}\n" + "\n".join(soluciones_tex) + "\n\\end{align*}\n")
+        punto = "$(" + ",".join(str(int(v)) for v in puntos[nombre]) + ")$"
+        # (la dimension no va en columna aparte: es el numero de coordenadas del punto)
+        # (los nodos de la enumeracion no caben; estan en resultados.csv y se comentan en el texto)
+        filas_tex.append(f"{f['etiqueta']} & {f['tipo']} & {f['d2']} & {tiempo} & {punto} \\\\")
+    cabecera = ("\\setlength{\\tabcolsep}{5pt}\n\\begin{tabular}{@{}lcrrl@{}}\n\\toprule\n"
+                "Tarea & Tipo & $d^2$ & ms & Punto obtenido\\\\\n\\midrule\n")
+    (carpeta / "tabla_ggh.tex").write_text(cabecera + "\n".join(filas_tex) + "\n\\bottomrule\n\\end{tabular}\n",
+                                           encoding="utf-8")
     datos_plot = []
-    for nombre_columna, macro in [("ms_babai", "PuntosBabai"), ("ms_exacto", "PuntosExactos")]:
-        coords = " ".join(f"({f['dimension']},{f[nombre_columna]:.6f})" for f in curvas)
-        datos_plot.append(f"\\newcommand{{\\{macro}}}{{{coords}}}")
+    # Curva GGH para la grafica: mediana del tiempo de las tareas de cada dimension. Solo se escribe
+    # el tiempo junto a la primera, la de dimension 7 y la ultima, para no amontonar etiquetas.
+    por_dim = {}
+    for f in resultados:
+        por_dim.setdefault(f["dimension"], []).append(f["ms_total"])
+    dims = sorted(por_dim)
+    curva = []
+    for d in dims:
+        ms = statistics.median(por_dim[d])
+        texto = f"{ms:.1f} ms".replace(".", ",") if d in (dims[0], 7, dims[-1]) else ""
+        curva.append(f"({d},{ms:.6f}) [{texto}]")
+    datos_plot.append(f"\\newcommand{{\\CurvaGGH}}{{{' '.join(curva)}}}")
     datos_plot.append(f"\\newcommand{{\\Repeticiones}}{{{args.repeticiones}}}")
-    (carpeta / "mediciones.tex").write_text("\n".join(datos_plot) + "\n")
+    (carpeta / "mediciones.tex").write_text("\n".join(datos_plot) + "\n", encoding="utf-8")
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     except (OSError, subprocess.CalledProcessError):
         commit = "no disponible"
     fuentes = [ROOT / "src/pqc/celosias" / n for n in ("gso.py", "lll.py", "babai.py", "enumeracion.py")]
-    entorno = {"fecha_documento": "2026-11-15", "python": sys.version, "sistema": platform.platform(),
+    entorno = {"fecha_documento": date.today().isoformat(), "python": sys.version, "sistema": platform.platform(),
                "arquitectura": platform.machine(), "repeticiones": args.repeticiones, "calentamiento": 1,
                "estadistico": "mediana", "unidad_tiempos": "ms", "commit": commit,
                "hashes_fuentes": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in fuentes}}
-    (carpeta / "entorno.json").write_text(json.dumps(entorno, indent=2, ensure_ascii=False) + "\n")
-    print(f"Regeneradas {len(resultados)} tareas, {len(curvas)} CVP comparados y {len(SELECCION)} seleccionadas.")
+    (carpeta / "entorno.json").write_text(json.dumps(entorno, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"Regeneradas {len(resultados)} tareas GGH ({len(puntuables)} en la tabla).")
     print(f"Medianas de {args.repeticiones} repeticiones; Python {platform.python_version()}, {platform.machine()}.")
 
 

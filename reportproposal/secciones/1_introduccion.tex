@@ -1,40 +1,18 @@
 \section{Introducción}
-Este trabajo estudia la resolución de instancias reducidas de los problemas geométricos
-que aparecen en GGH. Una base $B$ contiene vectores enteros por filas y genera
-$L(B)=\{xB:x\in\mathbb Z^n\}$. En SVP buscamos el vector no nulo de menor longitud;
-en CVP, el punto de $L(B)$ más próximo a un objetivo $t$, con distancia euclídea.
-Los multiplicadores son enteros: permitir coeficientes reales convertiría la búsqueda
-en un sistema lineal y cambiaría el problema.
+Los nuevos estándares post-cuánticos del NIST, como ML-KEM~\cite{fips203}, se apoyan en
+problemas de celosías, en particular en variantes de LWE. Cuando la dimensión es grande nadie
+conoce una forma eficiente de resolverlos, ni siquiera con un ordenador cuántico. En este trabajo
+hemos atacado instancias pequeñas y medianas de GGH~\cite{ggh}, LWE~\cite{regev} y
+Ring-LWE~\cite{lpr,tema11} para ver por nosotros mismos qué los hace difíciles y cuándo dejan de
+serlo.
 
-En GGH, $c=xB_{\rm pub}+e$: el criptograma es un punto de la celosía perturbado por
-un error pequeño. Una base privada favorable facilita el descifrado; el atacante dispone
-de otra base de la misma celosía~\cite{ggh,tema11}. Estudiamos SVP/CVP sobre las bases
-proporcionadas; encontrar una base reducida no implica recuperar la clave privada original.
+Usamos la notación del enunciado. Los vectores son filas y una base $B$ genera la celosía
+$L(B)=\{xB : x\in\mathbb Z^n\}$, todas las combinaciones enteras de sus filas. En SVP se busca el
+vector no nulo más corto y en CVP el punto de la celosía más cercano a un objetivo $t$. En GGH el
+criptograma $c=xB'+e$ es un punto de la celosía movido un poco por el error $e$, así que descifrar
+es resolver un CVP. En LWE la clave pública es $b=As+e \pmod q$: sin el error sería un sistema de
+ecuaciones normal, y es el error lo que lo complica.
 
-Se implementa una estrategia común: reducir con LLL, obtener un candidato y completar
-una enumeración exacta. Se verifican las 19 tareas GGH sin módulo y se presentan siete
-que alcanzan el tope del apartado de tareas. El alcance de esta memoria es GGH sin módulo.
-El repositorio también contiene métodos para LWE y Ring-LWE, cuyo análisis queda fuera
-de esta selección. Las tres tareas GGH modulares siguen pendientes de aclaración.
-El código GGH usa Python~3, listas de filas y \texttt{Fraction}; no emplea bibliotecas de
-resolución de celosías. El uso de asistencia de IA se documenta en las referencias~\cite{ia,claude}.
-
-\section{Algoritmos}
-\subsection{Gram-Schmidt y reducción LLL}
-Gram-Schmidt obtiene direcciones ortogonales $b_i^*$ y coeficientes $\mu_{ij}$ que
-describen las proyecciones de cada fila de la base. Son herramientas auxiliares:
-los $b_i^*$ no suelen pertenecer a la celosía y no sustituyen su base entera.
-
-LLL alterna restas de múltiplos enteros de filas e intercambios para reducir
-$|\mu_{ij}|$ y satisfacer la condición de Lovász, con $\delta=0{,}99$~\cite{galbraith}.
-Estas operaciones son reversibles sobre los enteros y conservan exactamente $L(B)$.
-Su coste es polinómico para $\delta$ fijo menor que~1; mejora la base pero no garantiza
-resolver SVP/CVP exactamente. Nuestra implementación calcula Gram-Schmidt al inicio
-y actualiza sus coeficientes y normas tras cada cambio de base.
-
-\begin{figure}[H]
-\centering
-\input{figuras/celosia}
-\caption{Dos bases de la misma celosía del ejemplo del enunciado. Cambian los vectores
-generadores, pero se conservan los puntos permitidos.}
-\end{figure}
+Lo hemos programado todo en Python~3, con fracciones exactas y sin bibliotecas de celosías. Las
+mismas herramientas (LLL y enumeración) nos sirven para GGH y para LWE. En Ring-LWE aprovechamos
+una debilidad de los parámetros de las tareas que detectamos al analizar sus datos.

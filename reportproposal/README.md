@@ -1,51 +1,41 @@
-# Propuesta de memoria: GGH
+# Memoria: criptoanálisis de GGH, LWE y Ring-LWE
 
-Versión redactada a partir de la organización y el diseño de `../report/`.
-El original se conserva como referencia. La propuesta se centra en los GGH sin
-módulo que resuelve el código actual: LLL, candidato inicial y enumeración exacta.
+Es la memoria que se entrega (`memoria.pdf`). Parte de la organización y el diseño de `../report/`,
+que se conserva solo como esqueleto. Tiene 5 páginas de contenido (las referencias, que no cuentan,
+empiezan en página nueva), texto a 12 pt y márgenes de 2,2 cm. `\finmemoria` (en `estilo.tex`) da
+error si el contenido pasa de 5 páginas.
+
+Contenido:
+
+- GGH: las 14 tareas puntuables sin módulo con LLL + enumeración exacta (Tabla 1, trazas de 2.03 y
+  3.03). Las 3 con reducción módulo n no se resuelven.
+- LWE: Tier1 T01–T05 y Tier2 T01–T03 por fuerza bruta sobre el error; Tier2 T04–T05 y Tier3 T01–T05
+  como CVP en la celosía q-aria (`src/pqc/lwe/ataque_celosia.py`). Tabla 2, trazas de L1.05 y L3.01.
+- Ring-LWE: las 3 tareas Tier3 como sistema lineal sin reducción mod q (traza de R3.01).
+- Figura de tiempo frente a talla para los tres métodos.
 
 ## Compilar
 
 Desde la raíz del repositorio, con `latexmk` instalado:
 
 ```bash
-python3 reportproposal/build.py
+python reportproposal/build.py            # solo compila
+python reportproposal/build.py --datos    # regenera los datos y compila
 ```
 
-El resultado es `reportproposal/memoria.pdf`. La propuesta incluye cinco páginas,
-contando referencias, con texto, tablas y leyendas a tamaño normal de 12 pt y
-márgenes de 2,2 cm. `secciones/` conserva la división de trabajo del original.
-
-## Regenerar resultados y mediciones
+## Regenerar los datos
 
 ```bash
-python3 reportproposal/generar_datos.py --repeticiones 21
-python3 reportproposal/build.py
+python reportproposal/generar_datos.py --repeticiones 21    # GGH
+python reportproposal/generar_datos_lwe.py --repeticiones 5 # LWE y Ring-LWE
 ```
 
-También se puede ejecutar `python3 reportproposal/build.py --datos`.
-Los tiempos son mediciones locales y cambiarán entre ejecuciones y equipos.
-Los datos ya generados permiten compilar sin repetir las medidas.
+Las mediciones actuales son del 16/11/2026 (Windows, Python 3.13) y cambian entre equipos.
+`datos/` guarda las tablas LaTeX generadas (`tabla_ggh.tex`, `tabla_lwe.tex`), las coordenadas de
+la figura (`mediciones*.tex`), los resultados completos en CSV, las trazas GGH (`trazas.json`), el
+entorno de medida y el registro de uso de IA (`prompts_ia.md`).
 
-`datos/` contiene las 19 soluciones y sus estadísticas, los once CVP comparados,
-las dos trazas reales utilizadas, el entorno y hashes de los algoritmos, y el
-resumen de consultas y uso de IA. Los siete ejercicios seleccionados para la
-exposición suman 4,1 puntos antes del tope general de 4.
-La tabla compara la cota inicial de cada candidato con la distancia óptima final.
-El PDF incorpora las consultas resumidas y el uso de las respuestas; el registro en
-Markdown aporta contexto adicional, sin ser necesario para leer la memoria.
+## Antes de entregar
 
-La validación inicial del 15/11/2026 pasó 222 pruebas. Tras incorporar los métodos
-LWE y Ring-LWE al repositorio, la revisión del 16/11/2026 pasa las 250 pruebas de
-la batería actual; `datos/validacion.json` registra el comando y el resultado.
-Las mediciones publicadas siguen siendo las del 15/11/2026, y sus hashes permiten
-comprobar que los algoritmos GGH usados no han cambiado. Los centros de la traza CVP
-se muestran como decimales redondeados; el cálculo y los datos JSON conservan las
-fracciones exactas.
-
-## Revisión de los autores
-
-El texto está redactado como propuesta completa para revisar entre los dos autores.
-Se deben confirmar los nombres, la selección final de tareas y las referencias antes
-de entregar, y comprender las trazas y la prueba de optimalidad para la defensa.
-No se presenta LWE, Ring-LWE ni los tres casos modulares como trabajo resuelto.
+- Revisar entre los dos autores el texto y las trazas.
+- Revisar que la declaración de IA de `secciones/5_referencias.tex` refleja el uso real.

@@ -1,13 +1,18 @@
 \section{Conclusiones}
-La estrategia resuelve exactamente las instancias GGH sin módulo de los cuatro niveles
-y la selección alcanza el tope de tareas. LLL conserva la celosía y mejora la base;
-Babai aporta una cota barata; la enumeración garantiza el óptimo. El caso 2.03 muestra
-que un candidato cercano no basta para afirmar que el problema está resuelto.
+Lo primero que hemos aprendido es que en GGH la dificultad está en la base y no en la celosía.
+LLL convierte las bases públicas en casi perpendiculares en milisegundos y con ellas Babai
+descifra sin la clave privada, aunque sin la enumeración no sabríamos si el punto es el más
+cercano (en 2.03 Babai da 186 y el óptimo es 155). Tampoco aguantó en dimensiones reales: Nguyen~\cite{nguyen} encontró
+un fallo en el propio diseño (el error es demasiado regular y simplifica el CVP),
+rompió cuatro de los cinco retos de sus autores, de dimensión 200 a 350, y concluyó que GGH no
+puede ser seguro sin dejar de ser práctico.
 
-Las fracciones evitan errores de poda; actualizar Gram-Schmidt reduce trabajo redundante;
-el orden desde el centro permite ajustar pronto el radio. Las pruebas y medidas apoyan
-la viabilidad en estos datos; la garantía exacta procede de la cobertura de la búsqueda.
+En LWE se ve claro el papel del error. Sin él (Tier~0) basta con resolver el sistema módulo $q$.
+Con él, la fuerza bruta cuesta $(2c+1)^n$ y deja de servir enseguida. Lo más interesante fue ver
+que el mismo CVP que rompe GGH resuelve también LWE, con 7 y 10 incógnitas en menos de un segundo.
+LWE solo es difícil con celosías enormes, como las de cientos de incógnitas de los estándares.
 
-Los tiempos no se extrapolan a parámetros criptográficos reales. Resolver estas tallas
-no supone una ruptura general de la criptografía poscuántica. Quedan fuera los tres
-casos modulares, cuya interpretación sigue pendiente de aclarar.
+Ring-LWE nos sorprendió: con estos parámetros el módulo $q$ no actúa y se resuelve como un sistema
+lineal incluso con $n=64$. La seguridad depende también de los parámetros. La mayor dificultad fue la lentitud de LLL con fracciones: en una prueba inicial
+(L2.05 más una fila por incrustación de Kannan, dimensión 31) tardaba 329{,}7\,s, y 0{,}69\,s
+calculando Gram-Schmidt una sola vez.

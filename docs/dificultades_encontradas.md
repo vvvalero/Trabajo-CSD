@@ -185,3 +185,39 @@ nosotros un mensaje con su clave pública y comprobamos que se recupera.
 - El CSV estaba ignorado por Git y faltaba un comando para reproducirlo. Se añade
   `scripts/resultados_ggh.py`, que regenera los 19 resultados y sus estadísticas,
   comprueba pertenencia y referencias y separa los tiempos de LLL y enumeración.
+
+## 16/11/2026
+
+### Hecho
+- Revisión de la memoria (`reportproposal/`) frente al enunciado y reescritura: ahora cubre GGH, LWE
+  y Ring-LWE en 5 páginas. Se añaden la justificación de Babai (por qué LLL rompe GGH), la fuerza
+  bruta LWE con el argumento de unicidad, el ataque propio a Ring-LWE, trazas de 2.03, 3.03, LWE 1.05
+  y Ring-LWE 3.01, la gráfica de tiempo frente a talla con los tres métodos y conclusiones nuevas.
+- `reportproposal/generar_datos_lwe.py`: tabla y tiempos de LWE (Tier1–2) y Ring-LWE (Tier3).
+- En la selección GGH, 2.02 se cambia por 2.03 (la tarea donde Babai falla).
+
+### Dificultades y decisiones
+
+**Cinco páginas.** Con LWE y Ring-LWE la memoria llegaba a 6 páginas. Se recuperó espacio quitando
+los saltos de página entre secciones, el apartado de reproducción y frases repetidas, poniendo la
+figura de la celosía al lado del texto y dejando flotar la tabla LWE. No se redujo el tamaño de letra.
+
+**Tareas GGH modulares.** En las tres mcd(det B, n) = 1, así que L(B) + nZ^d = Z^d y el problema sería
+trivial. Se explica en la memoria, pero no se cuentan como resueltas.
+
+**Revisión de los datos de la memoria (16/11).** Al repasar las cifras vimos que el límite de la
+fuerza bruta LWE (10^5 intentos por cota) era artificial: Tier2T03 (n = 5) necesita c = 6, es decir
+13^5 = 371 293 casos, y sale en 5,6 s. Subimos `MAX_INTENTOS` a 10^6 en `lwe/resolver.py` y Tier2T03
+queda resuelta (bit 0, error máximo 6; secretos falsos esperados ≈ 2·10^-11). Con ese límite Tier2T04
+(n = 7) abandona en ~25 s. También se corrigieron en la memoria el rango del cociente de Hadamard
+(0,007–0,24 en casi todas las bases públicas; tras LLL todas > 0,95), las etiquetas LWE (prefijo L,
+para no confundir L1.05 con la GGH 1.05) y una estimación de Tier2T05 que usaba un error no verificado.
+
+**Ataque a LWE como CVP (16/11).** Una revisión externa sugirió usar LLL y la enumeración también en
+LWE. Implementado en `lwe/ataque_celosia.py`: los vectores A s mod q forman una celosía q-aria (base
+[I | C^T ; 0 | q I] con C = A2 A1^-1), b está cerca del punto A s y se resuelve el CVP exacto. Resuelve
+Tier2T04–T05 y Tier3T01–T05 en menos de 1 s cada una (|e| ≤ 15) y coincide con la fuerza bruta en
+Tier0, Tier1 y Tier2T03. En 6 de 7 tareas ||e|| < λ1/2 (punto único); en Tier3T02 el margen no basta
+para demostrarlo. En el Ejemplo 4 (una ecuación de sobra) el CVP también da un secreto falso,
+(6, 19, 60, 37), igual que la fuerza bruta con c = 1. `romper_clave` usa la celosía cuando la fuerza
+bruta pasaría de 10^6 casos. 269 tests pasan.

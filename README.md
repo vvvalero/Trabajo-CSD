@@ -25,7 +25,7 @@ python run.py list                  # lista las tareas y sus parámetros
 python run.py solve Tier0T01_Latt   # resuelve una tarea
 python run.py all                   # resuelve todas -> results/results.md
 python -m pytest                    # tests
-python report/build.py              # memoria -> report/memoria.pdf
+python reportproposal/build.py      # memoria -> reportproposal/memoria.pdf (la que se entrega)
 ```
 
 ## Estructura
@@ -34,45 +34,37 @@ python report/build.py              # memoria -> report/memoria.pdf
 data/ggh, data/lwe         ficheros de tareas (45: 22 GGH + 20 LWE + 3 Ring-LWE)
 run.py                     ejecutar las tareas desde la terminal
 src/pqc/
-  lector_tareas.py         lee los ficheros de tareas -> TareaGGH / TareaLWE / TareaRingLWE   HECHO
-  matrices.py              operaciones con vectores y matrices (exactas y modulo q)            HECHO
+  lector_tareas.py         lee los ficheros de tareas -> TareaGGH / TareaLWE / TareaRingLWE
+  matrices.py              operaciones con vectores y matrices (exactas y modulo q)
   celosias/                algoritmos comunes a GGH y LWE
-    gso.py  lll.py  babai.py                                                                   HECHO
-    enumeracion.py          SVP/CVP exactos, cotas racionales y orden Schnorr-Euchner          HECHO
-  ggh/                     GGH
-    resolver.py  reduccion_babai.py                                                            HECHO
-    fuerza_bruta.py  celosia_modular.py                                                        TODO
-    juguete.py             GGH de juguete (generar claves, cifrar, descifrar)                  HECHO
-  lwe/                     LWE y Ring-LWE
-    resolver.py  fuerza_bruta.py  descifrado.py  ring.py                                       HECHO
-    ataque_celosia.py                                                                          TODO
-  lwe/                     LWE y Ring-LWE                                                       TODO
-    resolver.py  fuerza_bruta.py  ataque_celosia.py  descifrado.py  ring.py
-scripts/resultados_ggh.py  regenerar resultados y tiempos de los 19 GGH sin módulo               HECHO
-scripts/bench.py           tiempo frente a talla                                                TODO
+    gso.py  lll.py  babai.py
+    enumeracion.py         SVP/CVP exactos, cotas racionales y orden Schnorr-Euchner
+  ggh/
+    resolver.py            LLL + enumeracion exacta (tareas sin modulo)
+    reduccion_babai.py     LLL + Babai (aproximado, para comparar)
+    celosia_modular.py     tareas con reduccion modulo n: sin resolver
+    juguete.py             GGH de juguete (generar claves, cifrar, descifrar)
+  lwe/
+    resolver.py            fuerza bruta; si pasaria de 10^6 casos, ataque de celosia
+    fuerza_bruta.py        probar los errores de n ecuaciones y comprobar el resto
+    ataque_celosia.py      CVP en la celosia q-aria de A (LLL + enumeracion)
+    descifrado.py          descifrado de un bit
+    ring.py                Ring-LWE: sistema lineal sin reduccion mod q y descifrado
+scripts/resultados_ggh.py  resultados y tiempos de los 19 GGH sin modulo -> results/
 tests/                     tests (pytest)
-report/memoria.tex         memoria en LaTeX (máx. 5 páginas; pesos 15/30/40/15)
-  estilo.tex               diseño (sobrio, sin color): algoritmos, trazas, tabla de tareas
-  secciones/               una sección por fichero (contenido)
-  figuras/                 diagramas TikZ y gráfica de tiempos
-  datos/                   CSV de tiempos para la gráfica (los genera scripts/bench.py)
+reportproposal/            memoria que se entrega (ver su README): LaTeX, figuras y datos generados
+report/                    esqueleto inicial de la memoria (no se entrega)
 ```
 
-### Estado de GGH
+### Estado
 
-`run.py solve` usa **LLL + enumeración exacta** para las tareas sin módulo. Babai da
-el candidato inicial de CVP y un vector corto de la base reducida da el de SVP.
-La búsqueda usa fracciones exactas y solo descarta ramas que no pueden mejorar ese
-candidato. En SVP se excluye el cero; en empates se devuelve cualquier óptimo.
-
-Se han ejecutado las **19 tareas sin módulo**, incluidas las dos de dimensión 15.
-En `Tier02T03_Latt`, la enumeración mejora la distancia² de Babai de 186 a **155**.
-Los resultados se regeneran con `python3 scripts/resultados_ggh.py` y se guardan en
-`results/ggh_exactos.csv` (ignorado por Git). Separan el coste de LLL del de la
-enumeración e incluyen el número de nodos visitados.
-Esta medición puntual no sustituye el estudio comparativo de `scripts/bench.py`.
-El ataque aproximado sigue disponible en `ggh/reduccion_babai.py` para contrastarlo.
-Las tres tareas modulares siguen pendientes de aclaración e implementación.
+- **GGH:** las 19 tareas sin módulo con LLL + enumeración exacta. En `Tier02T03_Latt` la enumeración
+  mejora la distancia² de Babai de 186 a 155. Las tres con reducción módulo n quedan sin resolver
+  (ver "Erratas y puntos abiertos").
+- **LWE:** las 20 tareas. Fuerza bruta sobre el error hasta Tier2T03; el resto como CVP en la celosía
+  q-aria (menos de 1 s cada una).
+- **Ring-LWE:** las 3 tareas, como sistema lineal (los coeficientes de `a` son pequeños y el módulo
+  q no llega a actuar).
 
 ## Convenios
 

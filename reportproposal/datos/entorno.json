@@ -1,17 +1,17 @@
 {
-  "fecha_documento": "2026-11-15",
-  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
-  "sistema": "macOS-27.2-arm64-arm-64bit",
-  "arquitectura": "arm64",
+  "fecha_documento": "2026-11-16",
+  "python": "3.13.6 (tags/v3.13.6:4e66535, Aug  6 2025, 14:36:00) [MSC v.1944 64 bit (AMD64)]",
+  "sistema": "Windows-11-10.0.26300-SP0",
+  "arquitectura": "AMD64",
   "repeticiones": 21,
   "calentamiento": 1,
   "estadistico": "mediana",
   "unidad_tiempos": "ms",
-  "commit": "f6ef75544f10b302ee04c9f0edebde1e8461338c",
+  "commit": "c416c6abcd233f2ee7a57a8117d7bb37d42ab14c",
   "hashes_fuentes": {
-    "src/pqc/celosias/gso.py": "35750f243f2ee2fa1b68ea42af05504a9f99cccbde8f13d3755543cc7093c60e",
-    "src/pqc/celosias/lll.py": "8b38b5af3d28a23ad1f560d342ece58e456592098e3edb73276041abff16477c",
-    "src/pqc/celosias/babai.py": "dc7c3bf82cf2ded4ec7e935f4dddee9f31ea1218087236be850a4e9d7cf1f66a",
-    "src/pqc/celosias/enumeracion.py": "fa9b3051f693cc841144f254eb5c5ec40e60dbf46c68c64a150d3178ce6882ee"
+    "src\\pqc\\celosias\\gso.py": "5593a80aeb62d324d236ebdafbaa8fa5be211446386200e2ddc85e6f792e4850",
+    "src\\pqc\\celosias\\lll.py": "d4edd5718a2cc8e4ec8ca0d9f552d87932c961ec34e77952028d6622ade47edb",
+    "src\\pqc\\celosias\\babai.py": "5ddc8ca1f69fc80c56471f2972e7985997ee025d26969f790c0ed0f57bb859c6",
+    "src\\pqc\\celosias\\enumeracion.py": "576691da15c45537b38c61d8697716b0820b66aeb2a98fe89f803ed81bd4e137"
   }
 }
