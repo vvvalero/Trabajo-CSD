@@ -1,8 +1,13 @@
 # Consultas y uso de IA en la propuesta GGH
 
-Herramienta: Codex (OpenAI), asistencia de programación, explicación, revisión y
-redacción. Periodo: noviembre de 2026. No se registra un identificador preciso de la
-versión del modelo.
+Herramientas declaradas para el trabajo:
+
+- **OpenAI Codex**, de OpenAI: <https://openai.com/codex/>.
+- **Claude Code**, de Anthropic: <https://code.claude.com/docs/en/overview>.
+
+Asistencia de programación, explicación, revisión y redacción. Periodo: noviembre de
+2026. Se recoge el uso conjunto de las herramientas; no se registran identificadores
+precisos de las versiones de los modelos.
 
 ## Consultas resumidas
 
