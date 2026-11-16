@@ -1,0 +1,17 @@
+{
+  "fecha_documento": "2026-11-15",
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+  "sistema": "macOS-27.2-arm64-arm-64bit",
+  "arquitectura": "arm64",
+  "repeticiones": 21,
+  "calentamiento": 1,
+  "estadistico": "mediana",
+  "unidad_tiempos": "ms",
+  "commit": "f6ef75544f10b302ee04c9f0edebde1e8461338c",
+  "hashes_fuentes": {
+    "src/pqc/celosias/gso.py": "35750f243f2ee2fa1b68ea42af05504a9f99cccbde8f13d3755543cc7093c60e",
+    "src/pqc/celosias/lll.py": "8b38b5af3d28a23ad1f560d342ece58e456592098e3edb73276041abff16477c",
+    "src/pqc/celosias/babai.py": "dc7c3bf82cf2ded4ec7e935f4dddee9f31ea1218087236be850a4e9d7cf1f66a",
+    "src/pqc/celosias/enumeracion.py": "fa9b3051f693cc841144f254eb5c5ec40e60dbf46c68c64a150d3178ce6882ee"
+  }
+}

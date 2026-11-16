@@ -1,0 +1,18 @@
+{
+  "fecha": "2026-11-16",
+  "commit_base": "51baacb8554bacb6f26ab34b2b3ae1858915b7ca",
+  "comando": ".venv/bin/python -m pytest -q",
+  "resultado": "250 passed in 4.02s",
+  "pruebas_superadas": 250,
+  "pruebas_fallidas": 0,
+  "alcance": "Batería completa del repositorio, incluidos GGH, LWE y Ring-LWE.",
+  "validacion_inicial": {
+    "fecha": "2026-11-15",
+    "pruebas_superadas": 222
+  },
+  "mediciones_publicadas": {
+    "fecha": "2026-11-15",
+    "entorno": "entorno.json",
+    "recalculadas_en_esta_revision": false
+  }
+}

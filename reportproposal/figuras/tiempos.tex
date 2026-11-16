@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+\begin{semilogyaxis}[
+ width=0.92\linewidth,height=4.3cm,
+ xlabel={Dimensión de la celosía},ylabel={Tiempo total (ms)},
+ xmin=1.5,xmax=15.8,xtick={2,3,5,7,15},
+ grid=major,grid style={gray!20},
+ legend style={draw=none,at={(0.5,-0.40)},anchor=north,legend columns=2,column sep=5pt},
+ legend cell align=left,
+ every axis plot/.append style={mark size=2.3pt,line width=0.6pt}]
+\addplot[black,only marks,mark=o] coordinates {\PuntosBabai};
+\addlegendentry{LLL + Babai}
+\addplot[black,only marks,mark=square*] coordinates {\PuntosExactos};
+\addlegendentry{LLL + enumeración}
+\end{semilogyaxis}
+\end{tikzpicture}

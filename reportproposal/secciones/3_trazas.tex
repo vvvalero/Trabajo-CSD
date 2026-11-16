@@ -1,0 +1,48 @@
+\subsection{Trazas de ejecuciones reales}
+En las siete tareas de la tabla, la enumeración termina con $d^2=R_0^2$:
+certifica el candidato inicial al agotar las ramas que podían mejorarlo.
+Que coincidan ambas cotas no permite omitir la búsqueda exacta.
+\paragraph{SVP 1.05, dimensión 2.}
+La base original es $B=\bigl(\begin{smallmatrix}-330&79\\105&-26\end{smallmatrix}\bigr)$.
+LLL obtiene $R=\bigl(\begin{smallmatrix}-15&1\\0&-19\end{smallmatrix}\bigr)$, y el candidato
+es $v_0=(-15,1)$, con $R^2=226$. Gram-Schmidt da
+\[
+ \mu_{10}=-\frac{19}{226},\qquad N_0=226,\qquad
+ N_1=\frac{81225}{226}>226.
+\]
+Al elegir el último coeficiente, cualquier $x_1\ne0$ superaría el radio, por lo que
+$x_1=0$. Entonces la norma es $226x_0^2$: el cero se excluye y $|x_0|=1$ alcanza el
+mínimo. Se conserva $(-15,1)$; se visitan tres nodos y no hay mejoras. La reducción
+sola sugería la respuesta; la cota demuestra que es óptima.
+
+\paragraph{CVP 2.03, dimensión 5.}
+Se usa este caso adicional para justificar la necesidad de la fase exacta.
+El objetivo es $t=(809,994,540,1534,150)$. Sobre la base reducida, Babai del plano
+más cercano y la enumeración obtienen respectivamente:
+\begin{align*}
+ \widehat x&=(-86,-32,-71,45,12), & x^\star&=(-85,-33,-71,45,12),\\
+ \widehat v&=(806,996,532,1544,153),\\
+ v^\star&=(807,997,549,1528,155).
+\end{align*}
+La cota inicial es $R_0^2=\|\widehat v-t\|^2=186$ (el redondeo simultáneo da~187).
+Fijados $(x_4,x_3,x_2)=(12,45,-71)$, el centro es $z_1\approx-32{,}497$.
+La rama $x_1=-32$ no mejora la cota; al probar $x_1=-33$, el nuevo centro
+$z_0\approx-85{,}371$ lleva a $x_0=-85$ y distancia al cuadrado~155.
+La búsqueda visita siete nodos y encuentra una mejora: $\|v^\star-t\|^2=155$.
+Actualiza el radio y agota las ramas restantes sin encontrar una distancia inferior.
+Los centros se muestran redondeados para facilitar la lectura; el programa calcula
+con fracciones exactas. Los multiplicadores se refieren a la base reducida; ambos puntos
+pertenecen a la celosía original. Los valores exactos están en \texttt{datos/trazas.json}.
+
+\subsection{Tiempo frente a talla y alcance de las medidas}
+\begin{figure}[H]
+\centering
+\input{figuras/tiempos}
+\caption{Once instancias CVP: medianas de \Repeticiones{} repeticiones, con LLL incluido
+en ambos métodos. Babai es aproximado; la enumeración completa es exacta.}
+\end{figure}
+Los tiempos observados permiten completar las tareas de dimensión~15 en este entorno.
+El coste depende también de la geometría, las entradas de la base y la posición del
+objetivo: la figura no es un experimento que varíe solo la dimensión ni demuestra una
+ley de crecimiento. La enumeración usa aquí candidatos ajustados y visita pocas ramas;
+esto no elimina su coste exponencial en el peor caso.

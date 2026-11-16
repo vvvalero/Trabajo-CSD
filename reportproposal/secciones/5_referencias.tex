@@ -1,0 +1,38 @@
+\renewcommand{\refname}{Referencias y recursos utilizados}
+\begin{thebibliography}{7}
+\setlength{\itemsep}{3pt}
+\bibitem{tema11} MUCC--UPV. \emph{Enunciado del trabajo y Tema 11: Criptografía postcuántica}.
+Criptología y Seguridad de los Datos, 2026. Material de la asignatura.
+\bibitem{ggh} O.~Goldreich, S.~Goldwasser y S.~Halevi. Public-key cryptosystems from
+lattice reduction problems. \emph{CRYPTO '97}, LNCS~1294, pp.~112--131, 1997.
+\bibitem{galbraith} S.~D.~Galbraith. \emph{Mathematics of Public Key Cryptography}.
+Cambridge University Press, 2012. Capítulos~17 y~18, versión ampliada y corregida:
+\url{https://www.math.auckland.ac.nz/~sgal018/crypto-book/crypto-book.html}.
+\bibitem{ia} OpenAI. \emph{Codex}. Página oficial, consulta: 16/11/2026.
+\url{https://openai.com/codex/}.
+\bibitem{claude} Anthropic. \emph{Claude Code}. Documentación oficial, consulta: 16/11/2026.
+\url{https://code.claude.com/docs/en/overview}.
+\bibitem{python} Python Software Foundation. \emph{Python 3: biblioteca estándar},
+\texttt{fractions}, \texttt{math}, \texttt{time} y \texttt{statistics}.
+\url{https://docs.python.org/3/library/}.
+\bibitem{latex} LaTeX Project. \emph{LaTeX}; J.~Collins y colaboradores, \emph{latexmk};
+C.~Feuersänger, \emph{PGFPlots}. Herramientas de composición de la memoria y su figura.
+\end{thebibliography}
+
+\noindent\textbf{Prompts y uso de IA.} Se emplearon OpenAI Codex y Claude Code
+como apoyo técnico y de redacción.
+Consultas representativas, reformuladas para facilitar su lectura:
+\begin{enumerate}
+\item Si la base no es ortogonal, ¿cómo buscamos el punto más cercano?
+\item ¿Cómo hago el sistema en Python para sacar los multiplicadores?
+\item ¿Para qué necesitamos Gram-Schmidt en estos algoritmos?
+\item ¿Por qué al cambiar la base con LLL seguimos teniendo la misma celosía?
+\item ¿Qué diferencia hay entre los dos métodos de Babai?
+\item ¿Qué tengo que tener en cuenta para elegir el radio de búsqueda?
+\item Si LLL y Babai no siempre dan el óptimo, ¿qué nos falta para asegurarlo?
+\item ¿Puedes revisar el código por si se nos ha pasado algún caso?
+\end{enumerate}
+Las respuestas se usaron como propuestas de código, pruebas y redacción. Se contrastaron
+casos pequeños y se ejecutaron las 19 tareas; las 250 pruebas actuales pasan.
+Los resultados y tiempos proceden del programa. Biblioteca estándar y herramientas de
+composición:~\cite{python,latex}.
