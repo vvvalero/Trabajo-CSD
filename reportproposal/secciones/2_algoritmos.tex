@@ -25,8 +25,9 @@ solo pueden mejorar el resultado los enteros del intervalo
  |x_i-z_i|\leq\sqrt{(R^2-D)/N_i}.
 \]
 El recorrido sigue el orden de Schnorr--Euchner: prueba primero los enteros más próximos
-al centro. Si una contribución parcial alcanza la mejor distancia conocida, ninguna
-continuación puede mejorarla y se descarta la rama. Cada mejora reduce $R^2$.
+al centro. Como los términos restantes son no negativos, si la suma parcial ya alcanza
+la mejor distancia conocida, ninguna continuación puede mejorarla y se descarta la rama.
+Cada mejora reduce $R^2$.
 En SVP se rechaza el vector cero; en empates se conserva cualquier óptimo.
 
 \begin{enumerate}
@@ -39,9 +40,9 @@ En SVP se rechaza el vector cero; en empates se conserva cualquier óptimo.
 
 La cota parte de un punto válido y los descartes solo eliminan mejoras imposibles.
 Por tanto, al finalizar no queda un punto mejor sin explorar: esta es la garantía de
-optimalidad, no el mero hecho de que las pruebas pasen. Las cotas usan fracciones exactas:
-para $z_i=p/q$, se acota el entero $qx_i-p$ con raíz cuadrada entera, evitando perder
-soluciones por aproximaciones numéricas. El coste sigue siendo exponencial en el peor caso.
+optimalidad. Los límites y las comparaciones usan fracciones exactas y raíces cuadradas
+enteras, evitando perder soluciones por errores numéricos.
+El coste sigue siendo exponencial en el peor caso.
 
 \subsection{Elección frente a alternativas}
 LLL y Babai solos no certifican el óptimo; la traza CVP siguiente muestra un fallo real

@@ -35,6 +35,14 @@ La tabla compara la cota inicial de cada candidato con la distancia óptima fina
 El PDF incorpora los prompts relevantes y el uso de las respuestas; el registro en
 Markdown aporta contexto adicional, sin ser necesario para leer la memoria.
 
+La validación inicial del 15/11/2026 pasó 222 pruebas. Tras incorporar los métodos
+LWE y Ring-LWE al repositorio, la revisión del 16/11/2026 pasa las 250 pruebas de
+la batería actual; `datos/validacion.json` registra el comando y el resultado.
+Las mediciones publicadas siguen siendo las del 15/11/2026, y sus hashes permiten
+comprobar que los algoritmos GGH usados no han cambiado. Los centros de la traza CVP
+se muestran como decimales redondeados; el cálculo y los datos JSON conservan las
+fracciones exactas.
+
 ## Revisión de los autores
 
 El texto está redactado como propuesta completa para revisar entre los dos autores.

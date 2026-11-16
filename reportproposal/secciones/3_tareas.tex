@@ -1,10 +1,10 @@
 \section{Resolución de tareas}
-Se verificaron las 19 tareas sin módulo: cinco de tier~0, siete de tier~1, cinco de
-tier~2 y dos de tier~3. Se comprobaron pertenencia a la celosía, exclusión del cero en
-SVP y coincidencia con las cinco referencias de tier~0. La batería de 222 pruebas
-incluye contrastes con fuerza bruta independiente en casos pequeños, objetivos
-racionales, empates, bases sesgadas y coordenadas grandes. Las referencias de tier~0
-solo se consultan después del cálculo.
+Se verificaron las 19 tareas GGH sin módulo: pertenencia a la celosía, exclusión del
+cero en SVP y coincidencia con las cinco referencias de tier~0, consultadas después
+del cálculo. La validación del 15/11/2026 pasó 222 pruebas; la revisión del 16/11/2026
+pasa las 250 de la batería actual, que también incluye LWE y Ring-LWE. Hay contrastes
+con fuerza bruta independiente en casos pequeños, objetivos racionales, empates,
+bases sesgadas y coordenadas grandes.
 
 \subsection{Selección y resultados}
 Presentamos siete tareas con variedad de dimensiones y ambos problemas. Los pares de
@@ -30,7 +30,7 @@ La selección aporta $0{,}3+\min(4\cdot0{,}5,1{,}8)+2=4{,}1$ puntos, limitados a
 
 \subsection{Reproducción}
 \texttt{python3 reportproposal/generar\_datos.py} reproduce resultados, estadística y
-mediciones. Se realizó un calentamiento y \Repeticiones{} repeticiones por instancia con
+mediciones. Las medidas del 15/11/2026 usan un calentamiento y \Repeticiones{} repeticiones con
 \texttt{perf\_counter}, en macOS arm64 y Python~3.9.6. Se cronometran LLL y enumeración
 por separado; el total incluye ambos. La validación queda fuera del tiempo medido.
 Los CSV, las trazas y los hashes del código se conservan en \texttt{reportproposal/datos/}.
