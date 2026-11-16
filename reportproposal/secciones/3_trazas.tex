@@ -1,5 +1,5 @@
 \paragraph{Traza 2.03 (CVP, dimensión 5).}
-El objetivo es $t=(809,994,540,1534,150)$. LLL sube el cociente de Hadamard de 0{,}06 a 0{,}98.
+El objetivo es $t=(809,994,540,1534,150)$. LLL sube $H$ de 0{,}06 a 0{,}99.
 Con la base reducida, Babai da el punto $\widehat v=(806,996,532,1544,153)$, a distancia$^2$ 186
 (el redondeo directo da 187), con coeficientes $(-86,-32,-71,45,12)$. La enumeración fija los tres
 últimos coeficientes, $(12,45,-71)$, y el centro del siguiente queda en $-32{,}50$, casi a mitad
@@ -8,12 +8,10 @@ a $-85{,}37$ y con $-85$ sale $v^\star=(807,997,549,1528,155)$, a distancia$^2$ 
 límite se recorren las ramas que quedan (7 nodos en total) sin encontrar nada mejor: 155 es el óptimo.
 
 \paragraph{Traza 3.03 (CVP, dimensión 15).}
-La base pública tiene vectores con norma$^2$ de hasta 710\,154 y un cociente de Hadamard de 0{,}24;
-después de LLL ninguno pasa de 431 y el cociente es 0{,}96. Babai encuentra un punto a
-distancia$^2$ 8 y la enumeración lo confirma tras 15 nodos. El error que queda,
-$e=t-v=(0,0,0,1,-1,1,-1,-1,0,0,-1,1,0,1,0)$, solo tiene $0$ y $\pm1$, como el ruido de un cifrado
-GGH, así que el criptograma queda descifrado. La 3.04 (SVP con la misma base) se confirma igual,
-con norma$^2$ 250 y 16 nodos.
+LLL baja la norma$^2$ máxima de 710\,154 a 431 y sube $H$ de 0{,}24 a 0{,}96.
+Babai obtiene $d^2=8$ y la enumeración lo certifica en 15 nodos, con error
+$e=t-v=(0,0,0,1,-1,1,-1,-1,0,0,-1,1,0,1,0)$. En 3.04 (SVP con la misma base), certifica
+$\|v\|^2=250$ en 16 nodos.
 
 \subsection{LWE y Ring-LWE}
 La Tabla~\ref{tab:lwe} separa los tres métodos: fuerza bruta (L1.01--L2.03), CVP (L2.04--L3.05)
@@ -35,30 +33,29 @@ en las 16 ecuaciones errores entre $-4$ y 4. Para el criptograma $C=(236,352,5,1
 $R=C\cdot s\bmod 379=298$ y $d=115-298=-183$, a 6{,}5 de $-q/2$ y lejos de 0, así que el bit es~1.
 
 \paragraph{Traza L3.01 (CVP, $n=7$, $m=18$, $q=1223$).}
-La base de la celosía tiene 18 vectores con norma$^2$ de hasta 6{,}9 millones; tras LLL, de
-15\,141 como mucho. Babai da un punto a distancia$^2$ 1127 de $b$ y la enumeración confirma en 18
-nodos que es el más cercano. El error $b-As=(11,-3,12,6,8,13,\dots,-2)$ está entre $-13$ y 13 y su norma$^2$ es menos de
-la cuarta parte de la del vector más corto (8070). Sale $s=(691,281,601,35,742,795,1015)$.
+LLL baja la norma$^2$ máxima de 6{,}9 millones a 15\,141. Babai obtiene $d^2=1127$ y la enumeración
+lo certifica en 18 nodos. El error centrado $e=(11,-3,12,6,8,13,\dots,-2)$ cumple
+$\|e\|^2=1127<8070/4=\lambda_1^2/4$, que asegura la unicidad. El secreto figura en la Tabla~\ref{tab:lwe}.
 
+\begin{samepage}
 \paragraph{Traza Ring-LWE R3.01 ($n=16$, $q=1399$).}
-El vector $b$, tomado entre $-q/2$ y $q/2$, empieza por $(-69,-64,-33,5,\dots)$. Al resolver el
-sistema sale $(0{,}07;\ 1{,}94;\ 1{,}06;\ 1{,}95;\ 0{,}07;\ 1{,}97;\dots)$, que redondeado da
-$s=(0,2,1,2,0,2,1,0,0,0,1,0,1,2,0,0)$; el error $b-a\cdot s$ queda en $\{-1,0,1\}$. Para descifrar,
-$d=c_2-s\cdot c_1$ empieza por $(-2,-697,8,-1,-692,694,\dots)$ y, comparando con $q/4=349{,}75$,
-da los bits $0,1,0,0,1,1,\dots$
+Centramos $b=(-69,-64,-33,5,\dots)$. El sistema sin ruido da $(0{,}07;\ 1{,}94;\ 1{,}06;\dots)$;
+redondeamos a $s=(0,2,1,2,0,2,1,0,0,0,1,0,1,2,0,0)$ y comprobamos $e\in\{-1,0,1\}$.
+Al descifrar, $d=c_2-s\cdot c_1$ empieza por $(-2,-697,8,-1,-692,694,\dots)$; el umbral
+$q/4=349{,}75$ da los bits $0,1,0,0,1,1,\dots$
+\par\end{samepage}
 
 \subsection{Tiempo frente a talla}
 \begin{figure}[H]
 \centering
 \input{figuras/tiempos}
-\caption{Tiempo frente a talla. Junto a cada punto, su tiempo; entre dos, por cuánto se multiplica.
-Eje vertical logarítmico (cada marca, 10 veces la anterior). GGH: mediana por dimensión.}
+\caption{Tiempo frente a talla, eje vertical logarítmico. Etiquetas: tiempos y factores de aumento.
+GGH: mediana por dimensión.}
 \label{fig:tiempos}
 \end{figure}
-En GGH (Figura~\ref{fig:tiempos}a) el tiempo sube poco: de 0{,}1\,ms en
-dimensión 2 a unos 20\,ms en dimensión 15, porque tras LLL la enumeración apenas tiene que buscar. En
-la fuerza bruta de LWE (b) cada incógnita más multiplica el tiempo (por \TextoFactoresLWE: 9 por los casos y el resto porque cada caso cuesta más). El error también pesa: con 3
-incógnitas, pasar de $c=1$ a $c=4$ multiplica el tiempo por 60, y L2.03 ($c=6$) tarda más de 5\,s,
-mientras que como CVP sale en \TiempoCVPLdosTres{} y las de 10 incógnitas en menos de un segundo. En Ring-LWE
-(c), al doblar el grado el tiempo solo se multiplica por \TextoFactoresRing, lo que corresponde a
-resolver un sistema (doblar $n$ multiplica $n^3$ por 8).
+En GGH (Figura~\ref{fig:tiempos}a) pasamos de 0{,}1\,ms en dimensión 2 a unos 20\,ms en 15:
+tras LLL apenas hay búsqueda. En LWE (b), con $c=4$ cada incógnita multiplica los candidatos por 9;
+los tiempos crecen por \TextoFactoresLWE, aunque también varían las ecuaciones y la parada temprana.
+L2.03 tarda más de 5\,s por fuerza bruta y \TiempoCVPLdosTres{} como CVP; las de 10 incógnitas
+tardan menos de un segundo. En Ring-LWE (c), doblar el grado multiplica los tiempos por
+\TextoFactoresRing, próximos al factor 8 de las operaciones de un sistema cúbico.

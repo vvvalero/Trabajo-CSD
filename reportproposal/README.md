@@ -1,9 +1,9 @@
 # Memoria: criptoanálisis de GGH, LWE y Ring-LWE
 
 Es la memoria que se entrega (`memoria.pdf`). Parte de la organización y el diseño de `../report/`,
-que se conserva solo como esqueleto. Tiene 5 páginas de contenido (las referencias, que no cuentan,
-empiezan en página nueva), texto a 12 pt y márgenes de 2,2 cm. `\finmemoria` (en `estilo.tex`) da
-error si el contenido pasa de 5 páginas.
+que se conserva solo como esqueleto. El límite es de 5 páginas en total, incluidas las referencias,
+con texto a 12 pt y márgenes de 2,2 cm. `\finmemoria` (en `estilo.tex`) da error si el documento
+completo pasa de 5 páginas.
 
 Contenido:
 

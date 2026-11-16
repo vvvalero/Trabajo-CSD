@@ -1,25 +1,19 @@
 \section{Resolución de tareas}
-Hemos resuelto todas las tareas salvo las tres GGH con reducción módulo $n$ (3.01, 3.02 y 3.05),
-porque no llegamos a una interpretación clara de qué problema plantean. En total, 12 de nivel~1 (7 GGH y 5
-LWE), 10 de nivel~2 (5 GGH y 5 LWE) y 10 de nivel~3 (2 GGH, 5 LWE y 3 Ring-LWE), además de las 10
-de Tier~0. Llamamos $k.j$ a la tarea~$j$ del tier~$k$ de GGH, y L$k.j$ y R$k.j$ a las de LWE y
-Ring-LWE. Todas las soluciones están comprobadas: en
-GGH, que el punto es de la celosía (y en SVP distinto de cero); en LWE, que el secreto deja un error
-pequeño en todas las ecuaciones; y en las diez de Tier~0, que el resultado coincide con el del
-fichero. Hay además 269 pruebas automáticas que comparan métodos entre sí.
+Resolvemos 42 de las 45 tareas: 12 de Tier~1, 10 de Tier~2, 10 de Tier~3 y las 10 de Tier~0.
+Quedan fuera las GGH modulares 3.01, 3.02 y 3.05, cuya interpretación no aclaramos.
+$k.j$ identifica la tarea $j$ del tier $k$ de GGH; los prefijos L y R indican LWE y Ring-LWE.
+Comprobamos pertenencia a la celosía y vector no nulo en SVP, errores pequeños en LWE y las diez
+referencias de Tier~0. Además, pasan 269 pruebas automáticas, con comparaciones entre métodos.
 
 \subsection{GGH}
-La Tabla~\ref{tab:ggh} recoge las 14 tareas. En todas el punto de partida (Babai, o el vector más
-corto tras LLL) ya era el óptimo salvo en 2.03, donde la enumeración lo mejora, y la enumeración
-visita como mucho $n+2$ nodos en dimensión $n$. Las bases públicas
-tienen un cociente de Hadamard entre 0{,}007 y 0{,}24, salvo 1.01 y 1.03, que ya eran casi
-perpendiculares (0{,}91 y 0{,}99); tras LLL todas superan 0{,}95.
+La Tabla~\ref{tab:ggh} recoge las 14 tareas puntuables sin módulo. El candidato inicial es óptimo
+salvo en 2.03; la enumeración visita como mucho $n+2$ nodos. Tras LLL todas las bases tienen
+$H>0{,}95$, frente a $0{,}007$--$0{,}24$ inicialmente, salvo 1.01 y 1.03 ($0{,}91$ y $0{,}99$).
 
 \begin{table}[htb]
 \centering
 \input{datos/tabla_ggh}
-\caption{GGH con LLL y enumeración. $d^2$: distancia$^2$ óptima ($\|v\|^2$ en SVP, $\|v-t\|^2$ en
-CVP); ms: tiempo de LLL más enumeración, mediana de \Repeticiones{} repeticiones. La dimensión es
-el número de coordenadas del punto. En SVP también vale el opuesto del punto.}
+\caption{GGH: $d^2=\|v\|^2$ en SVP y $\|v-t\|^2$ en CVP. Tiempo de LLL y enumeración:
+mediana de \Repeticiones{} repeticiones. Dimensión: número de coordenadas. En SVP también vale $-v$.}
 \label{tab:ggh}
 \end{table}

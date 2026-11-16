@@ -1,18 +1,13 @@
 \section{Introducción}
-Los nuevos estándares post-cuánticos del NIST, como ML-KEM~\cite{fips203}, se apoyan en
-problemas de celosías, en particular en variantes de LWE. Cuando la dimensión es grande nadie
-conoce una forma eficiente de resolverlos, ni siquiera con un ordenador cuántico. En este trabajo
-hemos atacado instancias pequeñas y medianas de GGH~\cite{ggh}, LWE~\cite{regev} y
-Ring-LWE~\cite{lpr,tema11} para ver por nosotros mismos qué los hace difíciles y cuándo dejan de
-serlo.
+ML-KEM, estándar post-cuántico del NIST basado en Module-LWE~\cite{fips203}, muestra el interés
+de la criptografía de celosías. Atacamos las instancias de GGH~\cite{ggh}, LWE~\cite{regev} y
+Ring-LWE~\cite{lpr,tema11} del trabajo para estudiar cómo influyen la dimensión, el ruido y los
+parámetros en su dificultad.
 
-Usamos la notación del enunciado. Los vectores son filas y una base $B$ genera la celosía
-$L(B)=\{xB : x\in\mathbb Z^n\}$, todas las combinaciones enteras de sus filas. En SVP se busca el
-vector no nulo más corto y en CVP el punto de la celosía más cercano a un objetivo $t$. En GGH el
-criptograma $c=xB'+e$ es un punto de la celosía movido un poco por el error $e$, así que descifrar
-es resolver un CVP. En LWE la clave pública es $b=As+e \pmod q$: sin el error sería un sistema de
-ecuaciones normal, y es el error lo que lo complica.
+Para GGH usamos vectores fila: $L(B)=\{xB:x\in\mathbb Z^n\}$ son las combinaciones enteras
+de una base $B$. SVP busca el vector no nulo más corto; CVP, el punto más cercano a un objetivo
+$t$. Descifrar $c=xB'+e$ es un CVP. En LWE, $b=As+e\pmod q$: sin error, recuperar el secreto
+$s$ sería resolver un sistema modular.
 
-Lo hemos programado todo en Python~3, con fracciones exactas y sin bibliotecas de celosías. Las
-mismas herramientas (LLL y enumeración) nos sirven para GGH y para LWE. En Ring-LWE aprovechamos
-una debilidad de los parámetros de las tareas que detectamos al analizar sus datos.
+Implementamos los algoritmos en Python~3 con fracciones exactas, sin bibliotecas de celosías.
+Reutilizamos LLL y enumeración en GGH y LWE; para Ring-LWE aprovechamos sus parámetros pequeños.

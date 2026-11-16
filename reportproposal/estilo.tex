@@ -37,22 +37,20 @@
 \setlength{\belowdisplayshortskip}{4pt}
 \setlength{\textfloatsep}{9pt}
 \setlength{\intextsep}{8pt}
-\newcommand{\cabecera}[3]{%
+\newcommand{\cabecera}[2]{%
  \begin{center}
  {\Large\bfseries #1\par}\vspace{5pt}
- {\normalsize #2\par}\vspace{3pt}
- {\normalsize\itshape #3\par}
+ {\normalsize #2\par}
  \end{center}}
-% \finmemoria: va justo antes de las referencias, que no cuentan para el limite de 5 paginas.
-% Cierra la pagina actual (las referencias empiezan en pagina nueva) y comprueba que el contenido
-% no pasa de 5 paginas: tras \clearpage el contador vale (paginas usadas + 1).
+% \finmemoria: va despues de las referencias y comprueba el limite de cinco paginas en total.
+% Tras \clearpage el contador vale (paginas usadas + 1).
 % Para ver cuanto sobra sin que se pare la compilacion: pdflatex "\def\soloaviso{}\input{memoria}".
 \newcommand{\finmemoria}{%
  \clearpage
  \ifnum\value{page}>6
   \ifdefined\soloaviso
-   \PackageWarning{memoria}{El contenido supera cinco paginas}%
+   \PackageWarning{memoria}{La memoria completa supera cinco paginas}%
   \else
-   \PackageError{memoria}{El contenido supera cinco paginas}{Reducir contenido, no el tamano de fuente.}%
+   \PackageError{memoria}{La memoria completa supera cinco paginas}{Reducir contenido, no el tamano de fuente.}%
   \fi
  \fi}
