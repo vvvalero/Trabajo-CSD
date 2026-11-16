@@ -20,17 +20,23 @@ La memoria incluye la misma declaración resumida y la referencia a la herramien
    ortogonales?
 2. ¿Cómo plantear en Python el sistema que calcula los multiplicadores de la base
    antes de redondearlos?
-3. ¿Cómo elegir el radio de búsqueda para no dejar fuera un punto mejor?
-4. ¿Por qué LLL y Babai pueden dar un candidato válido sin ser óptimo y cómo completar
+3. ¿Para qué sirve Gram-Schmidt si los vectores ortogonalizados no tienen por qué
+   pertenecer a la celosía?
+4. ¿Por qué las operaciones de LLL conservan la celosía y qué cambia al reducir la
+   base?
+5. ¿Qué diferencia hay entre Babai por redondeo y por plano más cercano?
+6. ¿Cómo elegir el radio de búsqueda para no dejar fuera un punto mejor?
+7. ¿Por qué LLL y Babai pueden dar un candidato válido sin ser óptimo y cómo completar
    el resolutor con una enumeración exacta?
-5. ¿Qué errores o casos límite debería revisar en esta implementación?
+8. ¿Qué errores o casos límite debería revisar en esta implementación?
 
 ## Uso y comprobación de las respuestas
 
 El repositorio ya disponía de Gram-Schmidt, LLL y las dos variantes de Babai. Las
-respuestas se incorporaron como propuestas de código para la enumeración exacta,
-pruebas, explicaciones y texto del borrador. La organización y el diseño de la memoria
-parten de `report/`.
+consultas abarcaron la comprensión y revisión de estos algoritmos, además del diseño
+y la implementación de la enumeración exacta. Las respuestas se incorporaron como
+propuestas de código, pruebas, explicaciones y texto del borrador. La organización y
+el diseño de la memoria parten de `report/`.
 
 La comprobación incluyó las cinco referencias de tier 0, búsquedas independientes en
 casos pequeños y ejecución de las 19 tareas GGH sin módulo. La validación del
