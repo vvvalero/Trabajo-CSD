@@ -16,19 +16,14 @@ planteadas en la conversación. Conservan su propósito y se presentan como par�
 sin transcribir los mensajes de conversación.
 La memoria incluye la misma declaración resumida y la referencia a la herramienta.
 
-1. ¿Qué cambia al buscar el punto más cercano cuando los vectores de la base no son
-   ortogonales?
-2. ¿Cómo plantear en Python el sistema que calcula los multiplicadores de la base
-   antes de redondearlos?
-3. ¿Para qué sirve Gram-Schmidt si los vectores ortogonalizados no tienen por qué
-   pertenecer a la celosía?
-4. ¿Por qué las operaciones de LLL conservan la celosía y qué cambia al reducir la
-   base?
-5. ¿Qué diferencia hay entre Babai por redondeo y por plano más cercano?
-6. ¿Cómo elegir el radio de búsqueda para no dejar fuera un punto mejor?
-7. ¿Por qué LLL y Babai pueden dar un candidato válido sin ser óptimo y cómo completar
-   el resolutor con una enumeración exacta?
-8. ¿Qué errores o casos límite debería revisar en esta implementación?
+1. Si la base no es ortogonal, ¿cómo buscamos el punto más cercano?
+2. ¿Cómo hago el sistema en Python para sacar los multiplicadores?
+3. ¿Para qué necesitamos Gram-Schmidt en estos algoritmos?
+4. ¿Por qué al cambiar la base con LLL seguimos teniendo la misma celosía?
+5. ¿Qué diferencia hay entre los dos métodos de Babai?
+6. ¿Qué tengo que tener en cuenta para elegir el radio de búsqueda?
+7. Si LLL y Babai no siempre dan el óptimo, ¿qué nos falta para asegurarlo?
+8. ¿Puedes revisar el código por si se nos ha pasado algún caso?
 
 ## Uso y comprobación de las respuestas
 

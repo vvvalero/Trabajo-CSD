@@ -23,19 +23,14 @@ C.~Feuersänger, \emph{PGFPlots}. Herramientas de composición de la memoria y s
 como apoyo técnico y de redacción.
 Consultas representativas, reformuladas para facilitar su lectura:
 \begin{enumerate}
-\item ¿Qué cambia al buscar el punto más cercano cuando los vectores de la base
-no son ortogonales?
-\item ¿Cómo plantear en Python el sistema que calcula los multiplicadores de la
-base antes de redondearlos?
-\item ¿Para qué sirve Gram-Schmidt si los vectores ortogonalizados no tienen por
-qué pertenecer a la celosía?
-\item ¿Por qué las operaciones de LLL conservan la celosía y qué cambia al reducir
-la base?
-\item ¿Qué diferencia hay entre Babai por redondeo y por plano más cercano?
-\item ¿Cómo elegir el radio de búsqueda para no dejar fuera un punto mejor?
-\item ¿Por qué LLL y Babai pueden dar un candidato válido sin ser óptimo y cómo
-completar el resolutor con una enumeración exacta?
-\item ¿Qué errores o casos límite debería revisar en esta implementación?
+\item Si la base no es ortogonal, ¿cómo buscamos el punto más cercano?
+\item ¿Cómo hago el sistema en Python para sacar los multiplicadores?
+\item ¿Para qué necesitamos Gram-Schmidt en estos algoritmos?
+\item ¿Por qué al cambiar la base con LLL seguimos teniendo la misma celosía?
+\item ¿Qué diferencia hay entre los dos métodos de Babai?
+\item ¿Qué tengo que tener en cuenta para elegir el radio de búsqueda?
+\item Si LLL y Babai no siempre dan el óptimo, ¿qué nos falta para asegurarlo?
+\item ¿Puedes revisar el código por si se nos ha pasado algún caso?
 \end{enumerate}
 Las respuestas se usaron como propuestas de código, pruebas y redacción. Se contrastaron
 casos pequeños y se ejecutaron las 19 tareas; las 250 pruebas actuales pasan.
