@@ -1,3 +1,8 @@
+\paragraph{Traza 1.05 (SVP, dimensión 2).}
+LLL pasa de $((-330,79),(105,-26))$ a $((-15,1),(0,-19))$, con $\|b_0^*\|^2=226$ y
+$\|b_1^*\|^2=81225/226\approx359$. Con $x_1=\pm1$ ya habría $359>226=\|b_0\|^2$, así que se poda:
+$x_1=0$, $x_0=\pm1$ y $\|v\|^2=226$ (3 nodos).
+
 \paragraph{Traza 2.03 (CVP, dimensión 5).}
 El objetivo es $t=(809,994,540,1534,150)$. LLL sube $H$ de 0{,}06 a 0{,}99.
 Con la base reducida, Babai da el punto $\widehat v=(806,996,532,1544,153)$, a distancia$^2$ 186
@@ -10,20 +15,18 @@ límite se recorren las ramas que quedan (7 nodos en total) sin encontrar nada m
 \paragraph{Traza 3.03 (CVP, dimensión 15).}
 LLL baja la norma$^2$ máxima de 710\,154 a 431 y sube $H$ de 0{,}24 a 0{,}96.
 Babai obtiene $d^2=8$ y la enumeración lo certifica en 15 nodos, con error
-$e=t-v=(0,0,0,1,-1,1,-1,-1,0,0,-1,1,0,1,0)$. En 3.04 (SVP con la misma base), certifica
-$\|v\|^2=250$ en 16 nodos.
+$e=t-v=(0,0,0,1,-1,1,-1,-1,0,0,-1,1,0,1,0)$.
 
 \subsection{LWE y Ring-LWE}
-La Tabla~\ref{tab:lwe} separa los tres métodos: fuerza bruta (L1.01--L2.03), CVP (L2.04--L3.05)
-y sistema lineal (Ring-LWE). Palabras Ring-LWE completas:\\
+La Tabla~\ref{tab:lwe} separa fuerza bruta, CVP y sistema lineal (Ring-LWE). Palabras Ring-LWE:\\
 R3.01 \texttt{0100111001010000}; R3.02 \texttt{10100011110000010010000000101100};\\
 R3.03 \texttt{0011111100001011111011010001010000010001001001100101000100100111}.
 
 \begin{table}[htb]
 \centering
 \input{datos/tabla_lwe}
-\caption{LWE por fuerza bruta (arriba) y como CVP (en medio), y Ring-LWE (abajo). $m$: ecuaciones;
-$c$: error máximo encontrado; Casos: $(2c+1)^n$. Tiempo: mediana de 5 repeticiones.}
+\caption{LWE por fuerza bruta (arriba), como CVP (en medio; L2.03 con ambos) y Ring-LWE (abajo).
+$m$: ecuaciones; $c$: error máximo; Casos: $(2c+1)^n$. Mediana de 5 repeticiones.}
 \label{tab:lwe}
 \end{table}
 
@@ -35,27 +38,24 @@ $R=C\cdot s\bmod 379=298$ y $d=115-298=-183$, a 6{,}5 de $-q/2$ y lejos de 0, as
 \paragraph{Traza L3.01 (CVP, $n=7$, $m=18$, $q=1223$).}
 LLL baja la norma$^2$ máxima de 6{,}9 millones a 15\,141. Babai obtiene $d^2=1127$ y la enumeración
 lo certifica en 18 nodos. El error centrado $e=(11,-3,12,6,8,13,\dots,-2)$ cumple
-$\|e\|^2=1127<8070/4=\lambda_1^2/4$, que asegura la unicidad. El secreto figura en la Tabla~\ref{tab:lwe}.
+$\|e\|^2=1127<8070/4=\lambda_1^2/4$, que asegura la unicidad.
 
-\begin{samepage}
 \paragraph{Traza Ring-LWE R3.01 ($n=16$, $q=1399$).}
 Centramos $b=(-69,-64,-33,5,\dots)$. El sistema sin ruido da $(0{,}07;\ 1{,}94;\ 1{,}06;\dots)$;
 redondeamos a $s=(0,2,1,2,0,2,1,0,0,0,1,0,1,2,0,0)$ y comprobamos $e\in\{-1,0,1\}$.
-Al descifrar, $d=c_2-s\cdot c_1$ empieza por $(-2,-697,8,-1,-692,694,\dots)$; el umbral
-$q/4=349{,}75$ da los bits $0,1,0,0,1,1,\dots$
-\par\end{samepage}
+Al descifrar, $d=c_2-s\cdot c_1$ empieza por $(-2,-697,8,\dots)$ y el umbral $q/4=349{,}75$
+da los bits $0,1,0,\dots$
 
 \subsection{Tiempo frente a talla}
 \begin{figure}[H]
 \centering
 \input{figuras/tiempos}
-\caption{Tiempo frente a talla, eje vertical logarítmico. Etiquetas: tiempos y factores de aumento.
-GGH: mediana por dimensión.}
+\caption{Tiempo frente a talla (eje vertical logarítmico; etiquetas: tiempos y factores). GGH: mediana por
+dimensión; LWE: mediana de las tareas con $c=4$ de la Tabla~\ref{tab:lwe}.}
 \label{fig:tiempos}
 \end{figure}
 En GGH (Figura~\ref{fig:tiempos}a) pasamos de 0{,}1\,ms en dimensión 2 a unos 20\,ms en 15:
 tras LLL apenas hay búsqueda. En LWE (b), con $c=4$ cada incógnita multiplica los candidatos por 9;
-los tiempos crecen por \TextoFactoresLWE, aunque también varían las ecuaciones y la parada temprana.
-L2.03 tarda más de 5\,s por fuerza bruta y \TiempoCVPLdosTres{} como CVP; las de 10 incógnitas
-tardan menos de un segundo. En Ring-LWE (c), doblar el grado multiplica los tiempos por
-\TextoFactoresRing, próximos al factor 8 de las operaciones de un sistema cúbico.
+los tiempos crecen por \TextoFactoresLWE, aunque también varían las ecuaciones.
+L2.03 tarda más de 5\,s por fuerza bruta y \TiempoCVPLdosTres{} como CVP; las de 10 incógnitas, menos de 1\,s. En Ring-LWE (c), doblar el grado multiplica los tiempos por
+\TextoFactoresRing, cerca del 8 de un sistema cúbico.

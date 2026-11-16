@@ -1,7 +1,7 @@
 \clearpage
 \section{Conclusiones}
-En estas GGH, LLL facilita el ataque sin la base privada y la enumeración aporta la garantía
-que falta a Babai. Esto no demuestra que LLL rompa cualquier GGH. Nguyen~\cite{nguyen} explotó
+En GGH la dificultad está en la base y no en la celosía: LLL ataca sin la base privada y la
+enumeración aporta la garantía que falta a Babai. Esto no demuestra que LLL rompa cualquier GGH. Nguyen~\cite{nguyen} explotó
 la regularidad del error y rompió cuatro de los cinco retos originales, de dimensiones 200 a 350,
 mostrando limitaciones del diseño más allá de nuestras instancias.
 
@@ -11,5 +11,5 @@ estos tiempos no se extrapolan a los estándares, cuya seguridad depende de dime
 
 Ring-LWE muestra que un grado mayor no basta si los parámetros permiten eliminar el módulo.
 La principal dificultad de implementación fue el coste de las fracciones: en una prueba inicial
-de LLL (incrustación de L2.05 en dimensión 31), reutilizar Gram-Schmidt bajó el tiempo de
+de LLL (L2.05 con $b$ añadido como fila, incrustación de Kannan, en dimensión 31), reutilizar Gram-Schmidt bajó el tiempo de
 329{,}7\,s a 0{,}69\,s. Elegir la representación y evitar recálculos fue tan relevante como el algoritmo.

@@ -115,6 +115,8 @@ def main():
     if ataque(t203) != romper_clave(t203):          # los dos metodos deben dar el mismo secreto
         raise RuntimeError("L2.03: la fuerza bruta y el CVP no coinciden")
     ms_l203_cvp = mediana_ms(lambda: descifrar_bit(t203, ataque(t203)), args.repeticiones)
+    filas_tex.append(f"L2.03 (CVP) & {t203.n} & {len(t203.A)} & {t203.q} & 6 & -- & bit "
+                     f"{descifrar_bit(t203, ataque(t203))} & {ms_tex(ms_l203_cvp)} \\\\")
     for nombre in LWE_CELOSIA:
         t = lwe[nombre]
         s = ataque(t)
@@ -155,12 +157,12 @@ def main():
     # Curvas para la grafica de tiempos. Para que se lean sin interpretar el eje:
     #   - cada punto lleva escrito su tiempo ("7 ms", "1,4 s"),
     #   - entre dos puntos seguidos se escribe por cuanto se multiplica el tiempo ("x14").
-    # LWE: solo las tareas con c = 4 (asi solo cambia n); si hay dos con el mismo n, su media geometrica.
+    # LWE: solo las tareas con c = 4 (asi solo cambia n); la mediana por n, como en la tabla (con dos, su media).
     con_c4 = {}
     for n, ms, c in puntos_lwe:
         if c == 4:
             con_c4.setdefault(n, []).append(ms)
-    curva_lwe = [(n, math.exp(statistics.mean(math.log(t) for t in ts))) for n, ts in sorted(con_c4.items())]
+    curva_lwe = [(n, statistics.median(ts)) for n, ts in sorted(con_c4.items())]
     curva_ring = sorted(puntos_ring)
 
     def factores_texto(puntos):

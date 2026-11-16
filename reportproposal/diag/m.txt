@@ -1,0 +1,326 @@
+                           Criptoanálisis de GGH, LWE y Ring-LWE
+
+                                    Óscar García García Valentín Valero Jiménez
+
+1 Introducción
+
+  ML-KEM, estándar post-cuántico del NIST basado en Module-LWE [2], muestra el interés de
+la criptografía de celosías. Atacamos las instancias de GGH [3], LWE [5] y Ring-LWE [6, 1] del
+trabajo para estudiar cómo influyen la dimensión, el ruido y los parámetros en su dificultad.
+
+  Para GGH usamos vectores fila:  () = { :   Z} son las combinaciones enteras de una base
+. SVP busca el vector no nulo más corto; CVP, el punto más cercano a un objetivo . Descifrar
+ =  +  es un CVP. En LWE,  =  +  (mo´d ): sin error, recuperar el secreto  sería resolver
+un sistema modular.
+
+  Implementamos los algoritmos en Python 3 con fracciones exactas, sin bibliotecas de celosías.
+Reutilizamos LLL y enumeración en GGH y LWE; para Ring-LWE aprovechamos sus parámetros
+pequeños.
+
+2 Algoritmos
+
+2.1 Reducción de base: Gram-Schmidt y LLL
+
+  GGH publica una base de vectores largos y casi paralelos y                                          1
+guarda otra que facilita el descifrado. LLL [8, 7] obtiene una base                            2
+más corta y menos oblicua de la misma celosía (Figura 1), para
+
+facilitar la búsqueda.                                                                                               2
+
+   Gram-Schmidt calcula vectores perpendiculares , que no tienen        
+
+por qué pertenecer a la celosía, y coeficientes de proyección   .                                                          1
+                                                                                                                     (b) reducida
+LLL resta múltiplos enteros de                 otros vectores para lograr        |  |      1   (a) pública
+e intercambia vecinos si falla                 la condición de Lovász,            2        2
+                                                                                    
+                                                                                           
+
+(  -  2     ,  -1 )        -1  2,  con      =   0,99.  Son    cambios     unimodulares:        Figura 1. Dos bases de la mis-
+
+                         
+
+conservan la celosía. LLL es polinómico y garantiza 0                                          ma celosía (Ejemplo 1 del enun-
+                                                                                               ciado).
+(  -  1  )  -(-1)/21,          donde    1   es  la  longitud  mínima.       Medimos        la
+      4
+calidad con  = (det /   )1/ [7]: 0 <   1, con igualdad
+
+si la base es ortogonal.
+
+2.2 CVP aproximado: Babai
+
+   El redondeo de Babai [9] corresponde al descifrado de GGH: si  =  + , entonces -1 =
+
+  +   -1    y  recuperamos              si  cada    componente   del    error    transformado  está  entre  -  1  y  1  .  Reducir  la
+                                                                                                               2     2
+
+base favorece este criterio, pero no garantiza cumplirlo. Usamos el "plano más cercano": proyecta
+
+sobre Gram-Schmidt y redondea desde el último vector, actualizando el objetivo residual. Da un
+
+candidato rápido; la traza 2.03 muestra que puede fallar, por lo que necesitamos enumeración para
+
+asegurar el óptimo.
+
+2.3 Enumeración exacta (SVP y CVP)
+  Si  =  , Gram-Schmidt descompone la distancia en términos no negativos [7]:
+
+                                                                 -1
+                                                                 
+                                                           2                  2            2
+                                                       -      =                  (  -   )
+                                                                                            ,
+                                                                          
+
+                                                                 =0
+
+donde el centro  depende de  y de +1, . . . , -1. Buscamos de atrás hacia delante, con límite
+2 dado por Babai (en SVP, por el vector más corto de la base reducida y  = 0). En cada nivel
+
+probamos los enteros más próximos al centro primero (Schnorr­Euchner [10]). Si la suma parcial
+alcanza 2, podamos: los términos pendientes no pueden reducirla. Cada mejora baja el límite; al
+
+                                                                     1
+agotar las ramas no queda ningún punto mejor. Excluimos el cero en SVP y usamos fracciones para
+evitar pérdidas por redondeo. El coste es exponencial en el peor caso, aunque aquí LLL deja pocos
+nodos. Preferimos esta combinación a Lagrange­Gauss, limitado a dimensión 2, y a BKZ, cuya
+reducción más potente no fue necesaria.
+
+2.4 LWE: fuerza bruta sobre el error y descifrado de un bit
+
+   Elegimos  ecuaciones independientes, probamos sus errores en [-, ], despejamos  con la
+inversa módulo  y comprobamos el error en todas las ecuaciones. Aumentamos  desde 0 mientras
+(2 + 1)  106; el mayor caso es L2.03, con 135  371 000 posibilidades. Las ecuaciones sobrantes
+filtran candidatos: en L1.02, con 9 de sobra y residuos uniformes, un candidato falso pasa con
+probabilidad  729 (9/379)9  10-12. Pero no garantizan el secreto original: en el Ejemplo 4, con
+una sola de sobra, salen secretos falsos antes que el verdadero.
+
+   Para descifrar calculamos  =  ·  mo´d  y centramos  =  -  entre -/2 y /2. Decidimos
+bit 0 si || < /4 y bit 1 en otro caso: el ruido deja  cerca de 0 o de ±/2.
+
+2.5 LWE como CVP
+
+   Para las instancias mayores construimos la celosía   = {  +  :   Z,   Z}: contiene
+todos los vectores enteros congruentes con . Como    +  (mo´d ),  -    . Reducimos
+su base con LLL, resolvemos CVP con objetivo  y recuperamos  del punto encontrado módulo .
+La búsqueda depende de una celosía de dimensión   30, en lugar de enumerar (2 + 1) errores.
+L2.03 coincide con fuerza bruta y todos los errores obtenidos tienen valor absoluto  15. En las
+tareas resueltas por CVP, salvo L3.02, verificamos  < 1/2, que asegura que el punto próximo
+es único. En L3.02, 2 = 1073 > 21/4  1018: certificamos el óptimo, pero esa condición no
+permite asegurar que sea el secreto original.
+
+2.6 Ring-LWE: sistema lineal con estos parámetros
+
+   Ring-LWE usa  =  ·  +  en el anillo de polinomios módulo  + 1 y , con ,  pequeños [6, 1].
+Multiplicar por  es aplicar una matriz  ×  con estructura.
+
+   Aquí detectamos que  solo tiene coeficientes de 0 a 15, en lugar de ocupar todo el rango modular.
+Suponiendo ,   [-2, 2], cada coeficiente del producto más error tiene valor absoluto  30 + 2:
+482, 962 y 1922 para  = 16, 32, 64, siempre menor que /2. Por ello, al centrar los coeficientes
+públicos de  entre -/2 y /2, la igualdad  =  ·  +  vale sobre enteros, manteniendo el
+producto módulo  + 1. Resolvemos el sistema sin ruido y redondeamos. El acierto se comprueba,
+no se garantiza en general: las soluciones reales se alejan como mucho 0,203 de un entero, y los
+candidatos dejan   {-1, 0, 1} y   [-2, 2], coherentes con la hipótesis. El sistema requiere  (3)
+operaciones frente a 516  1011 candidatos de fuerza bruta ya en grado 16. Desciframos centrando
+ = 2 -  · 1 módulo : cada coeficiente da bit 0 si | | < /4, y bit 1 en otro caso. El atajo depende
+de estos parámetros y no se extiende al Ring-LWE general.
+
+3 Resolución de tareas
+
+   Resolvemos 42 de las 45 tareas: 12 de Tier 1, 10 de Tier 2, 10 de Tier 3 y las 10 de Tier 0. Quedan
+fuera las GGH modulares 3.01, 3.02 y 3.05, cuya interpretación no aclaramos. .  identifica la tarea
+ del tier  de GGH; los prefijos L y R indican LWE y Ring-LWE. Comprobamos pertenencia a la
+celosía y vector no nulo en SVP, errores pequeños en LWE y las diez referencias de Tier 0. Además,
+pasan 269 pruebas automáticas, con comparaciones entre métodos.
+
+3.1 GGH
+
+   La Tabla 1 recoge las 14 tareas puntuables sin módulo. El candidato inicial es óptimo salvo en
+2.03; la enumeración visita como mucho  + 2 nodos. Tras LLL todas las bases tienen  > 0,95,
+frente a 0,007­0,24 inicialmente, salvo 1.01 y 1.03 (0,91 y 0,99).
+
+                                                          2
+Tarea Tipo 2 ms Punto obtenido
+
+1.01 CVP 1 0,19 (36, 28, 30)
+1.02 SVP 17 0,20 (-4, 0, -1)
+1.03 CVP 16 1,19 (414, 152, 116, 537, 502, 185)
+1.04 SVP 237 1,35 (0, 2, 2, 15, 2)
+1.05 SVP 226 0,08 (-15, 1)
+1.06 SVP 229 0,11 (-15, 2)
+1.07 CVP 5 0,28 (38, -51, 84)
+2.01 SVP 230 0,47 (0, 1, 15, 2)
+2.02 SVP 263 1,08 (-1, 2, -1, -16, 1)
+2.03 CVP 155 1,26 (807, 997, 549, 1528, 155)
+2.04 CVP 12 2,16 (3842, 1730, 873, 1461, 833, 3106, 1477)
+2.05 SVP 263 1,67 (0, -1, 0, 2, -1, -1, 16)
+3.03 CVP 8 21,26 (-75, 35, 2, -76, 116, 166, 52, -233, -154, 28, -12, 101, 119, 36, 102)
+3.04 SVP 250 16,29 (1, 0, -15, 1, 1, -1, 0, 0, -2, 2, 0, -2, -1, 2, -2)
+
+Tabla 1. GGH: 2 = 2 en SVP y  -  2 en CVP. Tiempo de LLL y enumeración: mediana de
+21 repeticiones. Dimensión: número de coordenadas. En SVP también vale -.
+
+Traza 1.05 (SVP, dimensión 2). LLL pasa de ((-330, 79), (105, -26)) a ((-15, 1), (0, -19)), con
+0 2 = 226 y 12 = 81225/226  359. Con 1 = ±1 ya habría 359> 226 = 02, así que se
+poda: 1 = 0, 0 = ±1 y 2 = 226 (3 nodos).
+
+Traza 2.03 (CVP, dimensión 5). El objetivo es  = (809, 994, 540, 1534, 150). LLL sube  de
+0,06 a 0,99. Con la base reducida, Babai da el punto  = (806, 996, 532, 1544, 153), a distancia2
+186 (el redondeo directo da 187), con coeficientes (-86, -32, -71, 45, 12). La enumeración fija
+los tres últimos coeficientes, (12, 45, -71), y el centro del siguiente queda en -32,50, casi a mitad
+de camino entre dos enteros. Babai había elegido -32, pero al probar -33 el último centro pasa a
+-85,37 y con -85 sale  = (807, 997, 549, 1528, 155), a distancia2 155. Con ese nuevo límite se
+recorren las ramas que quedan (7 nodos en total) sin encontrar nada mejor: 155 es el óptimo.
+
+Traza 3.03 (CVP, dimensión 15). LLL baja la norma2 máxima de 710 154 a 431 y sube 
+de 0,24 a 0,96. Babai obtiene 2 = 8 y la enumeración lo certifica en 15 nodos, con error
+ =  -  = (0, 0, 0, 1, -1, 1, -1, -1, 0, 0, -1, 1, 0, 1, 0).
+
+3.2 LWE y Ring-LWE
+
+   La Tabla 2 separa fuerza bruta, CVP y sistema lineal (Ring-LWE). Palabras Ring-LWE:
+R3.01 0100111001010000; R3.02 10100011110000010010000000101100;
+R3.03 0011111100001011111011010001010000010001001001100101000100100111.
+
+Traza L1.05 (fuerza bruta y descifrado,  = 4,  = 16,  = 379). Con   3 ningún candidato
+pasa la comprobación. Con  = 4 aparece  = (47, 82, 262, 161), que deja en las 16 ecuaciones
+errores entre -4 y 4. Para el criptograma  = (236, 352, 5, 101),  = 115:  =  ·  mo´d 379 = 298
+y  = 115 - 298 = -183, a 6,5 de -/2 y lejos de 0, así que el bit es 1.
+
+Traza L3.01 (CVP,  = 7,  = 18,  = 1223). LLL baja la norma2 máxima de 6,9 millones
+a 15 141. Babai obtiene 2 = 1127 y la enumeración lo certifica en 18 nodos. El error centrado
+ = (11, -3, 12, 6, 8, 13, . . . , -2) cumple 2 = 1127 < 8070/4 = 21/4, que asegura la unicidad
+(secreto en la Tabla 2).
+
+Traza Ring-LWE R3.01 ( = 16,  = 1399). Centramos  = (-69, -64, -33, 5, . . . ). El sistema sin
+ruido da (0,07; 1,94; 1,06; . . . ); redondeamos a  = (0, 2, 1, 2, 0, 2, 1, 0, 0, 0, 1, 0, 1, 2, 0, 0) y com-
+probamos   {-1, 0, 1}. Al descifrar,  = 2 -  · 1 empieza por (-2, -697, 8, -1, -692, 694, . . . )
+
+                                                           3
+Tarea                Casos Resultado                                                        Tiempo (ms)
+
+L1.01            3 12               281 1  33  = (9, 162, 198)                                  0,14
+L1.02            3 12               379 4  93  = (270, 288, 152)                                6,33
+L1.03            3 12               281 1  33 bit 0                                             0,13
+L1.04            3 12               379 4  93 bit 0                                             7,52
+L1.05            4 16               379 4  94 bit 1                                            82,15
+L2.01            4 12               463 4  94  = (172, 96, 358, 414)                         110,12
+L2.02            5 18               463 4  95  = (283, 111, 15, 131, 443)                   1494,70
+L2.03            5 15               541 6  135 bit 0                                        5727,89
+
+L2.03 (CVP) 5 15 541 6 ­ bit 0                                                               47,88
+                                                                                            309,05
+L2.04            7 25 541 6 ­ bit 0                                                         754,27
+                                                                                            120,29
+L2.05            10 30 541 6 ­ bit 1
+                                                                                             81,21
+L3.01            7 18 1223 13 ­  = (691, 281, 601, 35, 742, 795, 1015)                       80,35
+                                                                                            115,26
+L3.02            7 16 1223 15 ­  = (1035, 694, 88, 84, 498, 201, 541)                       889,94
+
+L3.03            7 16 1223 15 ­ bit 1
+
+L3.04            7 18 1223 15 ­ bit 0
+
+L3.05            10 30 1223 15 ­ bit 1
+
+R3.01            16 16 1399 1                     ­ palabra de 16 bits                         8,52
+R3.02            32 32 3119 1                     ­ palabra de 32 bits                       74,60
+R3.03            64 64 5903 1                     ­ palabra de 64 bits                      805,40
+
+Tabla 2. LWE por fuerza bruta (arriba), como CVP (en medio; L2.03 con ambos) y Ring-LWE
+(abajo). : ecuaciones; : error máximo; Casos: (2 + 1). Mediana de 5 repeticiones.
+
+y el umbral /4 = 349,75 da los bits 0, 1, 0, 0, 1, 1, . . .
+3.3 Tiempo frente a talla
+
+             (a) GGH: LLL + enumeración (b) LWE: fuerza bruta ( = 4) (c) Ring-LWE: sistema lineal
+
+Tiempo (ms)  10          18,8 ms           1000            ×16 1,5 s    1000  ×11 805 ms
+                                            100
+             1   1,9 ms                       10  ×14 96 ms             100
+                                                                               ×9 75 ms
+                                                   7 ms
+             0,1                                  345                   10
+                    0,1 ms                                                     9 ms
+                  2 7 15                               Incógnitas
+                         Dimensión                                            16 32 64
+
+                                                                                     Grado
+
+Figura 2. Tiempo frente a talla (eje vertical logarítmico; etiquetas: tiempos y factores). GGH:
+mediana por dimensión; LWE: mediana de las tareas con  = 4 de la Tabla 2.
+
+  En GGH (Figura 2a) pasamos de 0,1 ms en dimensión 2 a unos 20 ms en 15: tras LLL apenas hay
+búsqueda. En LWE (b), con  = 4 cada incógnita multiplica los candidatos por 9; los tiempos crecen
+por 14 y 16, aunque también varían las ecuaciones. L2.03 tarda más de 5 s por fuerza bruta y 48 ms
+como CVP; las de 10 incógnitas, menos de 1 s. En Ring-LWE (c), doblar el grado multiplica los
+tiempos por 9 y 11, cerca del 8 de un sistema cúbico.
+
+                                                  4
+4 Conclusiones
+
+   En GGH la dificultad está en la base y no en la celosía: LLL ataca sin la base privada y la
+enumeración aporta la garantía que falta a Babai. Esto no demuestra que LLL rompa cualquier
+GGH. Nguyen [4] explotó la regularidad del error y rompió cuatro de los cinco retos originales, de
+dimensiones 200 a 350, mostrando limitaciones del diseño más allá de nuestras instancias.
+
+   En LWE, el error separa el sistema modular sencillo de Tier 0 de una búsqueda costosa. Convertir
+las instancias mayores en CVP resulta más eficaz que enumerar errores. Son parámetros docentes:
+estos tiempos no se extrapolan a los estándares, cuya seguridad depende de dimensión, ruido y
+módulo.
+
+   Ring-LWE muestra que un grado mayor no basta si los parámetros permiten eliminar el módulo.
+La principal dificultad de implementación fue el coste de las fracciones: en una prueba inicial de LLL
+(L2.05 con  añadido como fila, incrustación de Kannan, en dimensión 31), reutilizar Gram-Schmidt
+bajó el tiempo de 329,7 s a 0,69 s. Elegir la representación y evitar recálculos fue tan relevante como
+el algoritmo.
+
+Referencias y recursos utilizados
+
+ [1] MUCC­UPV. Enunciado del trabajo y Tema 11: Criptografía post-cuántica. Criptología y
+      Seguridad de los Datos, 2026.
+
+ [2] NIST. Module-Lattice-Based Key-Encapsulation Mechanism Standard. FIPS 203, 2024.
+
+ [3] O. Goldreich, S. Goldwasser y S. Halevi. Public-key cryptosystems from lattice reduction
+      problems. CRYPTO '97, LNCS 1294, pp. 112­131, 1997.
+
+ [4] P. Q. Nguyen. Cryptanalysis of the Goldreich-Goldwasser-Halevi cryptosystem from Crypto '97.
+      CRYPTO '99, LNCS 1666, pp. 288­304, 1999.
+
+ [5] O. Regev. On lattices, learning with errors, random linear codes, and cryptography. Journal of
+      the ACM 56(6):34, 2009.
+
+ [6] V. Lyubashevsky, C. Peikert y O. Regev. On ideal lattices and learning with errors over rings.
+      EUROCRYPT 2010, LNCS 6110, pp. 1­23, 2010.
+
+ [7] S. D. Galbraith. Mathematics of Public Key Cryptography. Cambridge UP, 2012.
+
+ [8] A. K. Lenstra, H. W. Lenstra y L. Lovász. Factoring polynomials with rational coefficients.
+      Mathematische Annalen 261:515­534, 1982.
+
+ [9] L. Babai. On Lovász' lattice reduction and the nearest lattice point problem. Combinatorica
+      6(1):1­13, 1986.
+
+[10] C.-P. Schnorr y M. Euchner. Lattice basis reduction: improved practical algorithms and solving
+      subset sum problems. Mathematical Programming 66:181­199, 1994.
+
+[11] OpenAI. Codex, asistente de programación (openai.com/codex). Nov. 2026.
+
+[12] Anthropic. Claude Code, modelo Claude Opus 5.5 (claude.com). Nov. 2026.
+
+[13] Python Software Foundation. Python 3 y su biblioteca estándar; LaTeX y PGFPlots.
+
+Uso de IA y prompts. Se usaron OpenAI Codex [11] y Claude Code [12] como apoyo para programar
+y revisar. Consultas representativas, reformuladas: (1) Si la base no es ortogonal, ¿cómo buscamos el
+punto más cercano? (2) ¿Cómo hago el sistema en Python para sacar los multiplicadores? (3) ¿Para
+qué necesitamos Gram-Schmidt en estos algoritmos? (4) ¿Por qué al cambiar la base con LLL
+seguimos teniendo la misma celosía? (5) ¿Qué diferencia hay entre los dos métodos de Babai?
+(6) ¿Qué tengo que tener en cuenta para elegir el radio de búsqueda? (7) Si LLL y Babai no siempre
+dan el óptimo, ¿qué nos falta para asegurarlo? Solo aceptamos las respuestas tras comprobarlas con
+el programa [13] y sus 269 pruebas.
+
+                                                          5
+

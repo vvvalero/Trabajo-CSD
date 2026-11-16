@@ -47,8 +47,9 @@ Lagrange--Gauss, limitado a dimensión 2, y a BKZ, cuya reducción más potente 
 Elegimos $n$ ecuaciones independientes, probamos sus errores en $[-c,c]$, despejamos $s$ con
 la inversa módulo $q$ y comprobamos el error en \emph{todas} las ecuaciones. Aumentamos $c$ desde
 0 mientras $(2c+1)^n\le10^6$; el mayor caso es L2.03, con $13^5\approx371\,000$ posibilidades.
-Las ecuaciones sobrantes filtran candidatos, pero no garantizan el secreto original: en el
-Ejemplo~4, con solo una de sobra, aparecen secretos falsos con error pequeño antes que el verdadero.
+Las ecuaciones sobrantes filtran candidatos: en L1.02, con 9 de sobra y residuos uniformes, un
+candidato falso pasa con probabilidad $\approx729\,(9/379)^9\approx10^{-12}$. Pero no garantizan
+el secreto original: en el Ejemplo~4, con una sola de sobra, salen secretos falsos antes que el verdadero.
 
 Para descifrar calculamos $R=C\cdot s\bmod q$ y centramos $d=B-R$ entre $-q/2$ y $q/2$.
 Decidimos bit 0 si $|d|<q/4$ y bit 1 en otro caso: el ruido deja $d$ cerca de 0 o de $\pm q/2$.
@@ -76,7 +77,7 @@ $\le30n+2$: 482, 962 y 1922 para $n=16,32,64$, siempre menor que $q/2$.
 Por ello, al \emph{centrar} los coeficientes públicos de $b$ entre $-q/2$ y $q/2$, la igualdad
 $b=a\cdot s+e$ vale sobre enteros, manteniendo el producto módulo $x^n+1$.
 Resolvemos el sistema sin ruido y redondeamos. El acierto se comprueba, no se garantiza en
-general: las soluciones reales se alejan menos de 0{,}21 de un entero, y los candidatos dejan
+general: las soluciones reales se alejan como mucho 0{,}203 de un entero, y los candidatos dejan
 $e\in\{-1,0,1\}$ y $s\in[-2,2]$, coherentes con la hipótesis. El sistema requiere $O(n^3)$
 operaciones frente a $5^{16}\approx10^{11}$ candidatos de fuerza bruta ya en grado 16.
 Desciframos centrando $d=c_2-s\cdot c_1$ módulo $q$: cada coeficiente da bit 0 si $|d_i|<q/4$,
