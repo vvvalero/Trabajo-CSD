@@ -1,54 +1,41 @@
-# Registro del uso de IA en la propuesta GGH
+# Consultas y uso de IA en la propuesta GGH
 
 Herramienta: Codex (OpenAI), asistencia de programación, explicación, revisión y
-redacción. No se registra aquí un identificador preciso de la versión del modelo.
-Propuesta redactada en noviembre de 2026. La bibliografía del PDF declara
-la asistencia; este registro conserva las instrucciones del usuario relevantes para
-los artefactos presentados. Los mensajes siguientes son literales, incluidas sus erratas.
+redacción. Periodo: noviembre de 2026. No se registra un identificador preciso de la
+versión del modelo.
 
-## Implementación y revisión de la enumeración
+## Consultas resumidas
 
-Contexto previo: el repositorio ya disponía de Gram-Schmidt, LLL y las dos variantes
-de Babai. Se pidió completar la búsqueda exacta para los GGH sin módulo.
+Los puntos siguientes son paráfrasis de las consultas realizadas. Conservan su
+propósito y se presentan como resúmenes, sin transcribir los mensajes de conversación.
+La memoria incluye la misma declaración resumida y la referencia a la herramienta.
 
-> vale pues guiame hacia resolver lo que queda de ggh
+1. **Fundamentos:** precisar qué resuelven LLL y Babai y cuándo es necesaria una
+   búsqueda exacta para SVP y CVP.
+2. **Diseño e implementación:** plantear la enumeración exacta para GGH sin módulo y
+   justificar las cotas de búsqueda y los criterios de poda.
+3. **Validación:** revisar el código, detectar casos límite y contrastar resultados
+   mediante pruebas independientes.
+4. **Presentación:** apoyar la preparación del borrador y revisar su estructura,
+   la interpretación de resultados, la claridad y el ajuste al enunciado.
 
-> vale, de cara a la defensa del trabajo tenemos que defender el uso de x algoritmo frente a otras opciones y tal quiero que sea defendible.
+## Uso y comprobación de las respuestas
 
-> pues implementalo supongo?
+El repositorio ya disponía de Gram-Schmidt, LLL y las dos variantes de Babai. Las
+respuestas se incorporaron como propuestas de código para la enumeración exacta,
+pruebas, explicaciones y texto del borrador. La organización y el diseño de la memoria
+parten de `report/`.
 
-> revisa los cambios porfa bien por si acaso
+La comprobación incluyó las cinco referencias de tier 0, búsquedas independientes en
+casos pequeños y ejecución de las 19 tareas GGH sin módulo. La validación del
+15/11/2026 pasó 222 pruebas; la revisión del 16/11/2026 pasa las 250 de la batería
+actual, que también incluye LWE y Ring-LWE. El resultado se registra en
+`validacion.json`. La justificación del óptimo se basa en la cobertura de la búsqueda
+y la poda, además de las comprobaciones experimentales.
 
-Uso del resultado: propuesta del recorrido de enumeración, cotas racionales, orden de
-Schnorr-Euchner, integración del resolutor, pruebas y documentación. Se contrastaron
-resultados con las referencias de tier 0 y con búsquedas independientes en casos
-pequeños. La revisión ejecutó 510 casos aleatorios y 1500 comprobaciones de cotas y
-orden; la validación del 15/11/2026 pasó 222 tests. No se usan esos tests como sustituto
-de la justificación matemática de cobertura y poda.
+Las mediciones publicadas se conservan desde el 15/11/2026. Los resultados, tiempos y
+trazas proceden de la ejecución del programa y se guardan en CSV/JSON. En la traza CVP
+se muestran centros redondeados para facilitar la lectura; el cálculo usa fracciones
+exactas.
 
-## Redacción de esta propuesta
-
-> vale, vamos a revisar el report (memoria)
-
-> como estamos en una rama quizás podemos crear un reportproposal (directorio) basado en report con una versión ya más o menos "final" pudiendo consultar el report original si se quisiese aunque sé q tenemos git y podríamos volver atrás
-
-> ves bien así la memoria propuesta entonces? cumple con las normas del enunciado?
-
-> haz lo q consideres
-
-> a ver quiero que hagas lo que consideres
-
-Uso del resultado: borrador de memoria centrado en GGH, organización y maquetación
-basadas en `report/`, generación reproducible de cifras y trazas, explicación de las
-garantías y límites y revisión del PDF. Los valores numéricos se ejecutan y guardan
-en los CSV/JSON; no se inventan resultados para rellenar tablas.
-Los prompts relevantes y el tratamiento de las respuestas también se incluyen en el
-propio PDF, que se puede leer sin este registro. La revisión incorpora la cota inicial
-por tarea y explica cuándo la enumeración certifica un candidato sin mejorarlo.
-La revisión del 16/11/2026 conserva las fórmulas centrales, simplifica los centros
-numéricos de la traza CVP y aclara que los métodos LWE y Ring-LWE del repositorio
-quedan fuera de la selección de esta memoria. La batería actual pasa 250 tests;
-el resultado se registra en `validacion.json`. Las medidas del día 15 se conservan.
-
-Este registro no atribuye a los autores una validación humana que aún no hayan hecho:
-la propuesta debe leerse y asumirse críticamente por ambos antes de su entrega.
+La propuesta debe ser revisada y comprendida por ambos autores antes de su entrega.

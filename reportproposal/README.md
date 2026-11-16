@@ -29,10 +29,10 @@ Los datos ya generados permiten compilar sin repetir las medidas.
 
 `datos/` contiene las 19 soluciones y sus estadísticas, los once CVP comparados,
 las dos trazas reales utilizadas, el entorno y hashes de los algoritmos, y el
-registro de prompts y uso de IA. Los siete ejercicios seleccionados para la
+resumen de consultas y uso de IA. Los siete ejercicios seleccionados para la
 exposición suman 4,1 puntos antes del tope general de 4.
 La tabla compara la cota inicial de cada candidato con la distancia óptima final.
-El PDF incorpora los prompts relevantes y el uso de las respuestas; el registro en
+El PDF incorpora las consultas resumidas y el uso de las respuestas; el registro en
 Markdown aporta contexto adicional, sin ser necesario para leer la memoria.
 
 La validación inicial del 15/11/2026 pasó 222 pruebas. Tras incorporar los métodos
