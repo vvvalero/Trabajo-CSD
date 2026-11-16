@@ -11,18 +11,19 @@ precisos de las versiones de los modelos.
 
 ## Consultas resumidas
 
-Los puntos siguientes son paráfrasis de las consultas realizadas. Conservan su
-propósito y se presentan como resúmenes, sin transcribir los mensajes de conversación.
+Los puntos siguientes son consultas representativas reformuladas a partir de dudas
+planteadas en la conversación. Conservan su propósito y se presentan como paráfrasis,
+sin transcribir los mensajes de conversación.
 La memoria incluye la misma declaración resumida y la referencia a la herramienta.
 
-1. **Fundamentos:** precisar qué resuelven LLL y Babai y cuándo es necesaria una
-   búsqueda exacta para SVP y CVP.
-2. **Diseño e implementación:** plantear la enumeración exacta para GGH sin módulo y
-   justificar las cotas de búsqueda y los criterios de poda.
-3. **Validación:** revisar el código, detectar casos límite y contrastar resultados
-   mediante pruebas independientes.
-4. **Presentación:** apoyar la preparación del borrador y revisar su estructura,
-   la interpretación de resultados, la claridad y el ajuste al enunciado.
+1. ¿Qué cambia al buscar el punto más cercano cuando los vectores de la base no son
+   ortogonales?
+2. ¿Cómo plantear en Python el sistema que calcula los multiplicadores de la base
+   antes de redondearlos?
+3. ¿Cómo elegir el radio de búsqueda para no dejar fuera un punto mejor?
+4. ¿Por qué LLL y Babai pueden dar un candidato válido sin ser óptimo y cómo completar
+   el resolutor con una enumeración exacta?
+5. ¿Qué errores o casos límite debería revisar en esta implementación?
 
 ## Uso y comprobación de las respuestas
 
